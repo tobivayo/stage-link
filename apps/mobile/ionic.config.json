@@ -1,0 +1,7 @@
+{
+  "name": "StageLink",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

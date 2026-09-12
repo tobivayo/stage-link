@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.welcome {
+  display: grid;
+  min-height: 100%;
+  padding: max(2rem, env(safe-area-inset-top)) 1.5rem max(2rem, env(safe-area-inset-bottom));
+  place-content: center;
+  text-align: center;
+}
+
+.welcome__mark {
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  margin: 0 auto 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  font-weight: 800;
+  font-size: 1.5rem;
+  place-items: center;
+  transform: rotate(-4deg);
+}
+
+h1 {
+  margin: 0;
+  color: var(--ion-color-light);
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  letter-spacing: -0.06em;
+}
+
+p {
+  max-width: 24rem;
+  margin: 0.75rem auto 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}

@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Builds and coverage
+dist/
+www/
+coverage/
+.angular/
+.cache/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Prisma generated client
+apps/api/src/generated/prisma/
+
+# Capacitor generated native projects
+apps/mobile/android/
+apps/mobile/ios/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Test artifacts
+playwright-report/
+test-results/

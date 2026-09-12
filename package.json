@@ -1,0 +1,43 @@
+{
+  "name": "stagelink",
+  "version": "0.1.0",
+  "private": true,
+  "description": "StageLink music ecosystem platform monorepo",
+  "packageManager": "npm@11.13.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,mobile -c orange,green \"npm run dev:api\" \"npm run dev:mobile\"",
+    "dev:api": "npm run start:dev --workspace @stagelink/api",
+    "predev:mobile": "npm run build --workspace @stagelink/shared",
+    "dev:mobile": "npm run start --workspace @stagelink/mobile",
+    "build": "npm run build --workspace @stagelink/shared && npm run build --workspace @stagelink/api && npm run build --workspace @stagelink/mobile",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "npm run db:validate && npm run db:generate && npm run format:check && npm run lint && npm test && npm run build",
+    "db:validate": "npm run prisma:validate --workspace @stagelink/api",
+    "db:generate": "npm run prisma:generate --workspace @stagelink/api",
+    "db:migrate": "npm run prisma:migrate --workspace @stagelink/api",
+    "db:deploy": "npm run prisma:deploy --workspace @stagelink/api",
+    "db:seed": "npm run prisma:seed --workspace @stagelink/api",
+    "db:studio": "npm run prisma:studio --workspace @stagelink/api",
+    "test": "npm run test --workspace @stagelink/api"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.68.0"
+  }
+}

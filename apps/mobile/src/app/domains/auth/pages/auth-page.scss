@@ -1,0 +1,83 @@
+:host,
+.auth-content {
+  min-height: 100%;
+}
+
+.auth-content::part(background) {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(237, 125, 58, 0.2), transparent 35%),
+    var(--ion-color-dark);
+}
+
+.auth-card {
+  width: min(100% - 2rem, 28rem);
+  margin: 0 auto;
+  padding: max(3rem, env(safe-area-inset-top)) 0 max(2rem, env(safe-area-inset-bottom));
+}
+
+.auth-card--wide {
+  width: min(100% - 2rem, 38rem);
+}
+
+.brand-mark {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1.25rem;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-dark);
+  font-weight: 800;
+  place-items: center;
+  transform: rotate(-4deg);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 10vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+form {
+  display: grid;
+  gap: 0.75rem;
+  margin: 2rem 0 1.25rem;
+}
+
+ion-item {
+  --background: rgba(255, 255, 255, 0.06);
+  --border-color: rgba(255, 255, 255, 0.14);
+  --border-radius: 0.75rem;
+}
+
+ion-button {
+  min-height: 3rem;
+  margin-top: 0.5rem;
+  font-weight: 700;
+}
+
+a {
+  color: var(--ion-color-primary);
+  font-weight: 650;
+}
+
+.form-error {
+  margin: 0;
+  color: #ffaaa0;
+}
+
+.field-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 38rem) {
+  .field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

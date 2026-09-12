@@ -1,0 +1,27 @@
+<ion-header translucent="true">
+  <ion-toolbar color="dark">
+    <ion-title>StageLink</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <main class="dashboard">
+    @if (loading() && !auth.user()) {
+      <ion-spinner name="crescent" />
+    } @else if (auth.user(); as user) {
+      <p class="eyebrow">Sesión privada activa</p>
+      <h1>Hola, {{ user.firstName }}</h1>
+      <p>
+        Esta es la base privada de StageLink. Los módulos musicales llegarán en los próximos
+        paquetes de trabajo.
+      </p>
+
+      <section class="actions" aria-label="Acciones de cuenta">
+        <ion-button routerLink="/settings">Roles y preferencias</ion-button>
+        <ion-button fill="outline" color="secondary" (click)="logout()" [disabled]="loading()">
+          Cerrar sesión
+        </ion-button>
+      </section>
+    }
+  </main>
+</ion-content>

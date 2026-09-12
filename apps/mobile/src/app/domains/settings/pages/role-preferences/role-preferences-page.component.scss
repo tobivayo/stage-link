@@ -1,0 +1,37 @@
+.settings {
+  display: grid;
+  width: min(100% - 2rem, 48rem);
+  margin: 0 auto;
+  padding: 2rem 0 max(2rem, env(safe-area-inset-bottom));
+  gap: 2rem;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+  font-size: 1.75rem;
+}
+
+section > p,
+ion-label p,
+small {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+ion-list {
+  margin-top: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+ion-item {
+  --background: rgba(255, 255, 255, 0.06);
+}
+
+form ion-button {
+  margin-top: 1rem;
+}
+
+.status-message {
+  margin: 0;
+  color: var(--ion-color-primary);
+}

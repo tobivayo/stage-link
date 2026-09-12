@@ -1,0 +1,44 @@
+<ion-content class="auth-content">
+  <main class="auth-card" aria-labelledby="login-title">
+    <div class="brand-mark" aria-hidden="true">SL</div>
+    <ion-text>
+      <h1 id="login-title">Volvé al escenario</h1>
+      <p>Ingresá a tu cuenta de StageLink.</p>
+    </ion-text>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <ion-item>
+        <ion-input
+          type="email"
+          label="Email"
+          labelPlacement="stacked"
+          autocomplete="email"
+          formControlName="email"
+        />
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="password"
+          label="Contraseña"
+          labelPlacement="stacked"
+          autocomplete="current-password"
+          formControlName="password"
+        />
+      </ion-item>
+
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+
+      <ion-button type="submit" expand="block" [disabled]="loading()">
+        @if (loading()) {
+          <ion-spinner name="crescent" />
+        } @else {
+          Iniciar sesión
+        }
+      </ion-button>
+    </form>
+
+    <a routerLink="/auth/register">Crear una cuenta</a>
+  </main>
+</ion-content>
