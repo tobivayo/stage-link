@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { IonRouterOutlet } from '@ionic/angular';
 
 @Component({
   selector: 'app-shell',
-  template: '<router-outlet />',
-  imports: [RouterOutlet],
+  template: '<ion-router-outlet></ion-router-outlet>',
+  imports: [IonRouterOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent {}

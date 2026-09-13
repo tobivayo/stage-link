@@ -5,4 +5,5 @@ export * from './enums/report-type.enum.js';
 export * from './enums/visibility.enum.js';
 export * from './types/api.types.js';
 export * from './types/auth.types.js';
+export * from './types/profile.types.js';
 export * from './utils/assert-never.js';

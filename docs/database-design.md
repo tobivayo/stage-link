@@ -11,9 +11,11 @@ Schema Language no puede representar.
 
 - `User`, `Role`, `UserRole` y `UserPreferences` separan identidad, permisos globales y preferencias.
 - `MusicianProfile`, `VenueProfile` y `ProviderProfile` representan identidades públicas distintas.
-- `VenueMember` y `ProviderMember` asignan administración sobre entidades concretas; un usuario puede
-  administrar varias y cada entidad puede tener varios administradores.
+- `ownerUserId` identifica al administrador único de banda, venue y proveedor. `VenueMember` y
+  `ProviderMember` quedan preparados para colaboradores futuros sin cambiar el ownership de PT-03.
 - `BandProject`, `BandMember` y `BandInvitation` cubren propiedad, membresía e invitaciones.
+- `ProfileLink`, `PortfolioItem` y `PortfolioItemShare` cubren enlaces, material externo y la decisión
+  de un integrante de mostrar material de banda en su portfolio individual.
 - `Call` y `Application` permiten postulaciones de un músico o una banda y múltiples postulaciones
   aceptadas por convocatoria.
 - `Event`, `EventParticipant`, `Rehearsal` y `RehearsalParticipant` registran participantes y estados.
@@ -49,8 +51,8 @@ Schema Language no puede representar.
     genéricos sin integridad referencial.
 12. Las entidades recuperables usan `deletedAt`; membresías, operaciones y auditoría conservan su
     historia sin soft delete.
-13. `UserRole.status` distingue roles activos, pendientes de perfil e inactivos. Solo `USER` nace
-    activo; PT-03 deberá activar los roles profesionales después de validar el perfil.
+13. `UserRole.status` distingue roles activos, pendientes de perfil e inactivos. PT-03 activa el rol
+    profesional dentro de la misma transacción que crea su perfil o banda mínima.
 14. `User` conserva aceptación de términos y ubicación inicial como texto. `Location` se reserva para
     perfiles y recursos con dirección estructurada.
 
@@ -58,7 +60,7 @@ Schema Language no puede representar.
 
 - Definir catálogo normalizado de instrumentos, géneros y servicios si los filtros lo requieren.
 - Decidir si las ubicaciones deben ser inmutables o generar snapshots para preservar eventos pasados.
-- Agregar invitaciones a bandas por email para personas todavía no registradas.
+- Integrar entrega real de invitaciones por email; PT-03 ya persiste destinatarios no registrados.
 - Definir permisos detallados dentro de bandas, venues y proveedores más allá de `OWNER` y `ADMIN`.
 - Establecer transiciones de estado válidas y reglas de sincronización entre postulaciones,
   participantes, publicaciones y operaciones.

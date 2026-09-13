@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
+<ion-content fullscreen="true" class="ion-padding">
   <main class="dashboard">
     @if (loading() && !auth.user()) {
       <ion-spinner name="crescent" />
@@ -17,7 +17,8 @@
       </p>
 
       <section class="actions" aria-label="Acciones de cuenta">
-        <ion-button routerLink="/settings">Roles y preferencias</ion-button>
+        <ion-button color="primary" routerLink="/profile">Mi perfil</ion-button>
+        <ion-button color="primary" routerLink="/settings">Roles y preferencias</ion-button>
         <ion-button fill="outline" color="secondary" (click)="logout()" [disabled]="loading()">
           Cerrar sesión
         </ion-button>
@@ -25,3 +26,8 @@
     }
   </main>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title> Footer </ion-title>
+  </ion-toolbar>
+</ion-footer>

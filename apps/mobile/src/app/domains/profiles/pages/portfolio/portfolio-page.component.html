@@ -1,0 +1,76 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button defaultHref="/profile" /></ion-buttons
+    ><ion-title>Portfolio</ion-title></ion-toolbar
+  ></ion-header
+><ion-content
+  ><main class="page-shell">
+    <form [formGroup]="form" (ngSubmit)="add()" class="form-stack">
+      <ion-item
+        ><ion-select label="Perfil" formControlName="profileKey">
+          @if (profiles()?.musicianProfile; as musician) {
+            <ion-select-option [value]="'musician:' + musician.id"
+              >Mi perfil músico</ion-select-option
+            >
+          }
+          @for (band of profiles()?.ownedBands || []; track band.id) {
+            <ion-select-option [value]="'band:' + band.id">{{ band.name }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-select label="Tipo" formControlName="type">
+          @for (type of types; track type) {
+            <ion-select-option [value]="type">{{ type }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-input label="Título" labelPlacement="stacked" formControlName="title" /></ion-item
+      ><ion-item
+        ><ion-textarea
+          label="Descripción"
+          labelPlacement="stacked"
+          formControlName="description" /></ion-item
+      ><ion-item
+        ><ion-input
+          type="url"
+          label="URL externa"
+          labelPlacement="stacked"
+          formControlName="url" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Experiencia relacionada"
+          labelPlacement="stacked"
+          formControlName="experienceRef" /></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad" formControlName="visibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-button type="submit">Agregar material</ion-button>
+    </form>
+    @if (message()) {
+      <p class="status">{{ message() }}</p>
+    }
+    <ion-list>
+      @for (item of items(); track item.id) {
+        <ion-item
+          ><ion-label
+            ><h2>{{ item.title }}</h2>
+            <p>
+              {{ item.type }} · {{ item.visibility }}
+              @if (item.bandProject) {
+                · {{ item.bandProject.name }}
+              }
+            </p>
+            <a [href]="item.url" target="_blank" rel="noopener">Abrir</a></ion-label
+          ><ion-button slot="end" fill="outline" color="secondary" (click)="remove(item.id)"
+            >Eliminar</ion-button
+          ></ion-item
+        >
+      } @empty {
+        <ion-item><ion-label>Sin material todavía.</ion-label></ion-item>
+      }
+    </ion-list>
+  </main></ion-content
+>

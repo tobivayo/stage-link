@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/dashboard" /></ion-buttons>
+    <ion-title>Mi perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <main class="page-shell">
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    } @else if (!data()) {
+      <ion-spinner />
+    } @else if (data(); as profiles) {
+      <header class="page-heading">
+        <p class="eyebrow">Identidad StageLink</p>
+        <h1>{{ profiles.firstName }} {{ profiles.lastName }}</h1>
+      </header>
+
+      <section class="card-grid">
+        <ion-card>
+          <ion-card-header><ion-card-title>Perfil músico</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <p>{{ profiles.musicianProfile ? 'Perfil creado' : 'Pendiente de completar' }}</p>
+            <ion-button routerLink="/profile/musician" [disabled]="!hasRole('MUSICIAN')">
+              {{ profiles.musicianProfile ? 'Editar' : 'Crear' }}
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header><ion-card-title>Bandas/proyectos</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <p>{{ profiles.ownedBands.length }} proyecto(s) administrado(s)</p>
+            <ion-button routerLink="/profile/bands">Gestionar</ion-button>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header><ion-card-title>Venue</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <p>{{ profiles.ownedVenues.length }} venue(s)</p>
+            <ion-button routerLink="/profile/venue" [disabled]="!hasRole('VENUE_ADMIN')">
+              Gestionar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header><ion-card-title>Proveedor</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <p>{{ profiles.ownedProviders.length }} perfil(es)</p>
+            <ion-button routerLink="/profile/provider" [disabled]="!hasRole('PROVIDER')">
+              Gestionar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </section>
+      <ion-button expand="block" fill="outline" routerLink="/profile/portfolio"
+        >Portfolio</ion-button
+      >
+    }
+  </main>
+</ion-content>

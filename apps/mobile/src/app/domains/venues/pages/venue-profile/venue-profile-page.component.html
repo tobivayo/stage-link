@@ -1,0 +1,106 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button defaultHref="/profile" /></ion-buttons
+    ><ion-title>Perfil de venue</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-stack">
+      <ion-item
+        ><ion-input label="Nombre" labelPlacement="stacked" formControlName="name" /></ion-item
+      ><ion-item
+        ><ion-textarea label="Descripción" labelPlacement="stacked" formControlName="description"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="number"
+          label="Capacidad"
+          labelPlacement="stacked"
+          formControlName="capacity" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Géneros aceptados"
+          labelPlacement="stacked"
+          formControlName="genres" /></ion-item
+      ><ion-item
+        ><ion-input label="Equipamiento" labelPlacement="stacked" formControlName="equipment"
+      /></ion-item>
+      <ion-item
+        ><ion-textarea
+          label="Días y horarios disponibles"
+          labelPlacement="stacked"
+          formControlName="availabilityNotes"
+      /></ion-item>
+      <h2>Ubicación</h2>
+      <ion-item
+        ><ion-input
+          label="Dirección"
+          labelPlacement="stacked"
+          formControlName="addressLine1" /></ion-item
+      ><ion-item
+        ><ion-input label="Ciudad" labelPlacement="stacked" formControlName="city" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Provincia/región"
+          labelPlacement="stacked"
+          formControlName="region" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Código postal"
+          labelPlacement="stacked"
+          formControlName="postalCode" /></ion-item
+      ><ion-item
+        ><ion-input label="País (ISO-2)" labelPlacement="stacked" formControlName="countryCode"
+      /></ion-item>
+      <h2>Contacto autorizado</h2>
+      <ion-item
+        ><ion-input
+          label="Nombre"
+          labelPlacement="stacked"
+          formControlName="contactName" /></ion-item
+      ><ion-item
+        ><ion-input
+          type="email"
+          label="Email"
+          labelPlacement="stacked"
+          formControlName="contactEmail" /></ion-item
+      ><ion-item
+        ><ion-input label="Teléfono" labelPlacement="stacked" formControlName="contactPhone"
+      /></ion-item>
+      <ion-item
+        ><ion-select label="Visibilidad de contacto" formControlName="contactVisibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad de dirección" formControlName="addressVisibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad del perfil" formControlName="visibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      >
+      <ion-item
+        ><ion-input label="Etiqueta de enlace" labelPlacement="stacked" formControlName="linkLabel"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="url"
+          label="URL externa"
+          labelPlacement="stacked"
+          formControlName="linkUrl"
+      /></ion-item>
+      <ion-button type="submit" expand="block">Guardar venue</ion-button>
+    </form>
+    @if (message()) {
+      <p class="status">{{ message() }}</p>
+    }
+  </main></ion-content
+>

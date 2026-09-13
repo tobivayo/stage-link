@@ -1,0 +1,73 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button defaultHref="/profile" /></ion-buttons
+    ><ion-title>Perfil proveedor</ion-title></ion-toolbar
+  ></ion-header
+><ion-content
+  ><main class="page-shell">
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-stack">
+      <ion-item
+        ><ion-input
+          label="Nombre comercial"
+          labelPlacement="stacked"
+          formControlName="businessName" /></ion-item
+      ><ion-item
+        ><ion-textarea
+          label="Descripción"
+          labelPlacement="stacked"
+          formControlName="description" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Servicios (por coma)"
+          labelPlacement="stacked"
+          formControlName="serviceTags" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Zona de cobertura"
+          labelPlacement="stacked"
+          formControlName="coverageArea" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Contacto"
+          labelPlacement="stacked"
+          formControlName="contactName" /></ion-item
+      ><ion-item
+        ><ion-input
+          type="email"
+          label="Email de contacto"
+          labelPlacement="stacked"
+          formControlName="contactEmail" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Teléfono"
+          labelPlacement="stacked"
+          formControlName="contactPhone" /></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad del contacto" formControlName="contactVisibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad del perfil" formControlName="visibility">
+          @for (item of visibility; track item) {
+            <ion-select-option [value]="item">{{ item }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      ><ion-item
+        ><ion-input label="Etiqueta de enlace" labelPlacement="stacked" formControlName="linkLabel"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="url"
+          label="URL externa"
+          labelPlacement="stacked"
+          formControlName="linkUrl"
+      /></ion-item>
+      <ion-button type="submit" expand="block">Guardar proveedor</ion-button>
+    </form>
+    @if (message()) {
+      <p class="status">{{ message() }}</p>
+    }
+  </main></ion-content
+>

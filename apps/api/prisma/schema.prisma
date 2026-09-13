@@ -28,7 +28,16 @@ enum Visibility {
 enum ProfileStatus {
   DRAFT
   ACTIVE
+  INACTIVE
+  SUSPENDED
   HIDDEN
+}
+
+enum VenueValidationStatus {
+  PENDING_VALIDATION
+  VALIDATED
+  REJECTED
+  SUSPENDED
 }
 
 enum OrganizationMemberRole {
@@ -38,14 +47,14 @@ enum OrganizationMemberRole {
 
 enum BandStatus {
   ACTIVE
-  ON_HOLD
+  INACTIVE
   DISBANDED
 }
 
 enum BandMemberRole {
-  OWNER
   ADMIN
   MEMBER
+  REPRESENTATIVE
 }
 
 enum BandMemberStatus {
@@ -53,12 +62,20 @@ enum BandMemberStatus {
   INACTIVE
 }
 
-enum InvitationStatus {
+enum BandInvitationStatus {
   PENDING
   ACCEPTED
-  DECLINED
+  REJECTED
   CANCELLED
   EXPIRED
+}
+
+enum PortfolioItemType {
+  IMAGE
+  VIDEO
+  AUDIO
+  LINK
+  DOCUMENT
 }
 
 enum EventStatus {
@@ -204,6 +221,8 @@ model User {
   musicianProfile             MusicianProfile?
   venueMemberships            VenueMember[]
   providerMemberships         ProviderMember[]
+  ownedVenues                 VenueProfile[]         @relation("VenueOwner")
+  ownedProviders              ProviderProfile[]      @relation("ProviderOwner")
   ownedBands                  BandProject[]          @relation("BandOwner")
   bandMemberships             BandMember[]
   bandInvitationsSent         BandInvitation[]       @relation("BandInvitationSender")
@@ -225,6 +244,8 @@ model User {
   reportsReceived             Report[]               @relation("ReportedUser")
   reportsAssigned             Report[]               @relation("ReportAssignee")
   auditLogs                   AuditLog[]             @relation("AuditActor")
+  portfolioItemsCreated       PortfolioItem[]        @relation("PortfolioCreator")
+  portfolioSharesCreated      PortfolioItemShare[]   @relation("PortfolioShareCreator")
 
   @@index([status])
   @@index([deletedAt])
@@ -272,47 +293,70 @@ model UserPreferences {
 }
 
 model MusicianProfile {
-  id           String        @id @default(uuid()) @db.Uuid
-  userId       String        @unique @db.Uuid
-  stageName    String?
-  bio          String?
-  city         String?
-  countryCode  String?       @db.Char(2)
-  instruments  String[]
-  genres       String[]
-  visibility   Visibility    @default(PUBLIC)
-  status       ProfileStatus @default(DRAFT)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  deletedAt    DateTime?
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  applications Application[]
-  ratings      Rating[]
+  id                   String               @id @default(uuid()) @db.Uuid
+  userId               String               @unique @db.Uuid
+  stageName            String?
+  bio                  String?
+  instruments          String[]
+  genres               String[]
+  influences           String[]
+  experience           String?
+  previousProjects     String[]
+  availableForProjects Boolean              @default(false)
+  isSoloProject        Boolean              @default(true)
+  locationText         String?
+  city                 String?
+  countryCode          String?              @db.Char(2)
+  photoUrl             String?
+  visibility           Visibility           @default(PUBLIC)
+  locationVisibility   Visibility           @default(REGISTERED_ONLY)
+  status               ProfileStatus        @default(DRAFT)
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  deletedAt            DateTime?
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links                ProfileLink[]
+  portfolioItems       PortfolioItem[]
+  portfolioShares      PortfolioItemShare[]
+  applications         Application[]
+  ratings              Rating[]
 
   @@index([visibility, status])
   @@index([deletedAt])
 }
 
 model VenueProfile {
-  id                  String             @id @default(uuid()) @db.Uuid
-  locationId          String?            @db.Uuid
+  id                  String                @id @default(uuid()) @db.Uuid
+  ownerUserId         String                @db.Uuid
+  locationId          String?               @db.Uuid
   name                String
   description         String?
   capacity            Int?
-  addressVisibility   Visibility         @default(PUBLIC)
-  visibility          Visibility         @default(PUBLIC)
-  status              ProfileStatus      @default(DRAFT)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  genres              String[]
+  availability        Json?
+  equipment           String[]
+  contactName         String?
+  contactEmail        String?
+  contactPhone        String?
+  contactVisibility   Visibility            @default(PRIVATE)
+  addressVisibility   Visibility            @default(PUBLIC)
+  visibility          Visibility            @default(PUBLIC)
+  status              ProfileStatus         @default(DRAFT)
+  validationStatus    VenueValidationStatus @default(PENDING_VALIDATION)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
   deletedAt           DateTime?
-  location            Location?          @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  location            Location?             @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  owner               User                  @relation("VenueOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
   members             VenueMember[]
+  links               ProfileLink[]
   events              Event[]
   calls               Call[]
   rehearsals          Rehearsal[]
   eventParticipations EventParticipant[]
   ratings             Rating[]
 
+  @@index([ownerUserId])
   @@index([locationId])
   @@index([visibility, status])
   @@index([deletedAt])
@@ -334,10 +378,16 @@ model VenueMember {
 
 model ProviderProfile {
   id                  String             @id @default(uuid()) @db.Uuid
+  ownerUserId         String             @db.Uuid
   locationId          String?            @db.Uuid
   businessName        String
   description         String?
   serviceTags         String[]
+  coverageArea        String?
+  contactName         String?
+  contactEmail        String?
+  contactPhone        String?
+  contactVisibility   Visibility         @default(PRIVATE)
   addressVisibility   Visibility         @default(REGISTERED_ONLY)
   visibility          Visibility         @default(PUBLIC)
   status              ProfileStatus      @default(DRAFT)
@@ -345,10 +395,13 @@ model ProviderProfile {
   updatedAt           DateTime           @updatedAt
   deletedAt           DateTime?
   location            Location?          @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  owner               User               @relation("ProviderOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
   members             ProviderMember[]
+  links               ProfileLink[]
   eventParticipations EventParticipant[]
   ratings             Rating[]
 
+  @@index([ownerUserId])
   @@index([locationId])
   @@index([visibility, status])
   @@index([deletedAt])
@@ -394,27 +447,33 @@ model Location {
 }
 
 model BandProject {
-  id            String             @id @default(uuid()) @db.Uuid
-  ownerUserId   String             @db.Uuid
-  name          String
-  description   String?
-  genres        String[]
-  city          String?
-  countryCode   String?            @db.Char(2)
-  visibility    Visibility         @default(PUBLIC)
-  status        BandStatus         @default(ACTIVE)
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  deletedAt     DateTime?
-  owner         User               @relation("BandOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
-  members       BandMember[]
-  invitations   BandInvitation[]
-  events        EventParticipant[]
-  calls         Call[]
-  applications  Application[]
-  rehearsals    Rehearsal[]
-  conversations ChatConversation[]
-  ratings       Rating[]
+  id                 String             @id @default(uuid()) @db.Uuid
+  ownerUserId        String             @db.Uuid
+  name               String
+  description        String?
+  genres             String[]
+  influences         String[]
+  locationText       String?
+  city               String?
+  countryCode        String?            @db.Char(2)
+  imageUrl           String?
+  locationVisibility Visibility         @default(REGISTERED_ONLY)
+  visibility         Visibility         @default(PUBLIC)
+  status             BandStatus         @default(ACTIVE)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deletedAt          DateTime?
+  owner              User               @relation("BandOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  members            BandMember[]
+  invitations        BandInvitation[]
+  links              ProfileLink[]
+  portfolioItems     PortfolioItem[]
+  events             EventParticipant[]
+  calls              Call[]
+  applications       Application[]
+  rehearsals         Rehearsal[]
+  conversations      ChatConversation[]
+  ratings            Rating[]
 
   @@index([ownerUserId])
   @@index([visibility, status])
@@ -440,24 +499,88 @@ model BandMember {
 }
 
 model BandInvitation {
-  id            String           @id @default(uuid()) @db.Uuid
-  bandId        String           @db.Uuid
-  invitedUserId String           @db.Uuid
-  invitedById   String           @db.Uuid
-  role          BandMemberRole   @default(MEMBER)
+  id            String               @id @default(uuid()) @db.Uuid
+  bandId        String               @db.Uuid
+  invitedUserId String?              @db.Uuid
+  invitedEmail  String?
+  invitedById   String               @db.Uuid
+  role          BandMemberRole       @default(MEMBER)
   instrument    String?
   message       String?
-  status        InvitationStatus @default(PENDING)
+  status        BandInvitationStatus @default(PENDING)
   expiresAt     DateTime?
   respondedAt   DateTime?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  band          BandProject      @relation(fields: [bandId], references: [id], onDelete: Cascade)
-  invitedUser   User             @relation("BandInvitationRecipient", fields: [invitedUserId], references: [id], onDelete: Cascade)
-  invitedBy     User             @relation("BandInvitationSender", fields: [invitedById], references: [id], onDelete: Restrict)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  band          BandProject          @relation(fields: [bandId], references: [id], onDelete: Cascade)
+  invitedUser   User?                @relation("BandInvitationRecipient", fields: [invitedUserId], references: [id], onDelete: Cascade)
+  invitedBy     User                 @relation("BandInvitationSender", fields: [invitedById], references: [id], onDelete: Restrict)
 
   @@index([bandId, status])
   @@index([invitedUserId, status])
+}
+
+model ProfileLink {
+  id                String           @id @default(uuid()) @db.Uuid
+  musicianProfileId String?          @db.Uuid
+  venueProfileId    String?          @db.Uuid
+  providerProfileId String?          @db.Uuid
+  bandProjectId     String?          @db.Uuid
+  label             String
+  url               String
+  visibility        Visibility       @default(PUBLIC)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  musicianProfile   MusicianProfile? @relation(fields: [musicianProfileId], references: [id], onDelete: Cascade)
+  venueProfile      VenueProfile?    @relation(fields: [venueProfileId], references: [id], onDelete: Cascade)
+  providerProfile   ProviderProfile? @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  bandProject       BandProject?     @relation(fields: [bandProjectId], references: [id], onDelete: Cascade)
+
+  @@index([musicianProfileId])
+  @@index([venueProfileId])
+  @@index([providerProfileId])
+  @@index([bandProjectId])
+}
+
+model PortfolioItem {
+  id                String               @id @default(uuid()) @db.Uuid
+  createdByUserId   String               @db.Uuid
+  musicianProfileId String?              @db.Uuid
+  bandProjectId     String?              @db.Uuid
+  type              PortfolioItemType
+  title             String
+  description       String?
+  url               String
+  storageKey        String?
+  mimeType          String?
+  experienceRef     String?
+  visibility        Visibility           @default(PUBLIC)
+  sortOrder         Int                  @default(0)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  deletedAt         DateTime?
+  createdBy         User                 @relation("PortfolioCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  musicianProfile   MusicianProfile?     @relation(fields: [musicianProfileId], references: [id], onDelete: Cascade)
+  bandProject       BandProject?         @relation(fields: [bandProjectId], references: [id], onDelete: Cascade)
+  shares            PortfolioItemShare[]
+
+  @@index([musicianProfileId, sortOrder])
+  @@index([bandProjectId, sortOrder])
+  @@index([visibility, deletedAt])
+}
+
+model PortfolioItemShare {
+  id                String          @id @default(uuid()) @db.Uuid
+  portfolioItemId   String          @db.Uuid
+  musicianProfileId String          @db.Uuid
+  createdByUserId   String          @db.Uuid
+  createdAt         DateTime        @default(now())
+  portfolioItem     PortfolioItem   @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  musicianProfile   MusicianProfile @relation(fields: [musicianProfileId], references: [id], onDelete: Cascade)
+  createdBy         User            @relation("PortfolioShareCreator", fields: [createdByUserId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioItemId, musicianProfileId])
+  @@index([musicianProfileId])
 }
 
 model Event {

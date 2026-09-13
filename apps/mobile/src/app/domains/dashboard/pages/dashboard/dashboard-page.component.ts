@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonHeader, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular';
+import {
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 
@@ -8,7 +16,16 @@ import { AuthService } from '../../../../core/auth/auth.service';
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss',
-  imports: [RouterLink, IonButton, IonContent, IonHeader, IonSpinner, IonTitle, IonToolbar],
+  imports: [
+    RouterLink,
+    IonButton,
+    IonContent,
+    IonHeader,
+    IonSpinner,
+    IonTitle,
+    IonToolbar,
+    IonFooter,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent implements OnInit {

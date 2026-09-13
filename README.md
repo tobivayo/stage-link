@@ -1,8 +1,8 @@
 # StageLink
 
 Plataforma mobile first para conectar músicos, bandas, venues, proveedores y organizadores. El
-repositorio contiene PT-01 (arquitectura/base técnica) y PT-02 (usuarios, autenticación, roles y
-preferencias). Los demás dominios continúan como placeholders sin lógica de negocio.
+repositorio contiene PT-01 (arquitectura/base técnica), PT-02 (usuarios/autenticación) y PT-03
+(perfiles, bandas e integrantes). Los dominios posteriores continúan como placeholders.
 
 ## Requisitos
 
@@ -66,22 +66,22 @@ Con PostgreSQL disponible, la respuesta debe indicar `"status":"ok"` y `"databas
 
 ## Comandos principales
 
-| Comando               | Descripción                            |
-| --------------------- | -------------------------------------- |
-| `npm run dev`         | Ejecuta API y mobile en paralelo       |
-| `npm run dev:api`     | Ejecuta NestJS con recarga             |
-| `npm run dev:mobile`  | Ejecuta Angular/Ionic                  |
-| `npm run build`       | Compila todos los workspaces           |
-| `npm run lint`        | Ejecuta ESLint en todos los workspaces |
-| `npm run format`      | Formatea el repositorio con Prettier   |
-| `npm run validate`    | Valida Prisma, formato, lint y builds  |
-| `npm run db:validate` | Valida el esquema Prisma               |
-| `npm run db:generate` | Genera el cliente Prisma               |
-| `npm run db:migrate`  | Crea y aplica una migración nueva      |
-| `npm run db:deploy`   | Aplica migraciones ya versionadas      |
-| `npm run db:seed`     | Crea o actualiza los roles base        |
-| `npm run db:studio`   | Abre Prisma Studio                     |
-| `npm test`            | Ejecuta los tests backend de PT-02     |
+| Comando               | Descripción                                  |
+| --------------------- | -------------------------------------------- |
+| `npm run dev`         | Ejecuta API y mobile en paralelo             |
+| `npm run dev:api`     | Ejecuta NestJS con recarga                   |
+| `npm run dev:mobile`  | Ejecuta Angular/Ionic                        |
+| `npm run build`       | Compila todos los workspaces                 |
+| `npm run lint`        | Ejecuta ESLint en todos los workspaces       |
+| `npm run format`      | Formatea el repositorio con Prettier         |
+| `npm run validate`    | Valida Prisma, formato, lint, tests y builds |
+| `npm run db:validate` | Valida el esquema Prisma                     |
+| `npm run db:generate` | Genera el cliente Prisma                     |
+| `npm run db:migrate`  | Crea y aplica una migración nueva            |
+| `npm run db:deploy`   | Aplica migraciones ya versionadas            |
+| `npm run db:seed`     | Crea o actualiza los roles base              |
+| `npm run db:studio`   | Abre Prisma Studio                           |
+| `npm test`            | Ejecuta los tests backend                    |
 
 ## Capacitor
 
@@ -131,18 +131,27 @@ un token copiado antes del logout conserva validez hasta expirar. Refresh tokens
 fuera de PT-02.
 
 `USER` se asigna activo al registrarse. `MUSICIAN`, `BAND_ADMIN`, `VENUE_ADMIN` y `PROVIDER` pueden
-solicitarse desde la app y quedan en `PENDING_PROFILE`; PT-03 deberá completar el perfil y activarlos.
+solicitarse desde la app y quedan en `PENDING_PROFILE`; PT-03 activa el rol cuando se crea el perfil.
 `ADMIN` nunca puede autogestionarse. El frontend usa `localStorage` solo como base web de desarrollo;
 antes de distribuir una app nativa deberá migrarse el token a almacenamiento seguro de Capacitor.
 
 Los endpoints y ejemplos manuales están en
 [docs/pt-02-authentication.md](docs/pt-02-authentication.md).
 
+## Perfiles y bandas de PT-03
+
+PT-03 implementa perfiles de músico, venue y proveedor, bandas/proyectos, invitaciones e integrantes,
+portfolio por URL y vistas públicas con filtrado de visibilidad. Los roles pendientes se promueven a
+`ACTIVE` al crear su entidad mínima. Las invitaciones por email se registran, pero su envío real queda
+para un paquete de notificaciones.
+
+Los endpoints, decisiones y pruebas manuales están en
+[docs/pt-03-profiles-bands.md](docs/pt-03-profiles-bands.md).
+
 ## Próximo paquete
 
-PT-03 debería implementar perfiles de músico, venue y proveedor, asociar administradores a su
-entidad concreta y promover a `ACTIVE` el rol pendiente únicamente cuando el perfil mínimo sea
-válido. No debe ampliar todavía bandas, convocatorias, eventos, chat ni marketplace.
+PT-04 debería implementar búsqueda y recomendación sobre perfiles activos y visibles, con filtros
+por instrumentos, géneros, ubicación y disponibilidad. No debe acoplar el ranking a datos privados.
 
 ## Documentación
 

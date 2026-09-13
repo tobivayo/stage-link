@@ -1,0 +1,57 @@
+.page-shell {
+  width: min(100% - 2rem, 52rem);
+  margin: 0 auto;
+  padding: 1.5rem 0 max(2rem, env(safe-area-inset-bottom));
+}
+
+.page-heading h1,
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  letter-spacing: -0.04em;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--ion-color-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.card-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+ion-card,
+ion-list {
+  margin-inline: 0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.form-stack {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.form-stack ion-item {
+  --background: rgba(255, 255, 255, 0.06);
+  --border-radius: 0.75rem;
+}
+
+.status {
+  color: var(--ion-color-primary);
+}
+
+.error {
+  color: #ffaaa0;
+}
+
+@media (min-width: 44rem) {
+  .card-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

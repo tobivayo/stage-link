@@ -1,0 +1,49 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button defaultHref="/profile" /></ion-buttons
+    ><ion-title>Bandas y proyectos</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <ion-button routerLink="/profile/bands/new">Crear proyecto</ion-button>
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (invitations().length) {
+      <h2>Invitaciones</h2>
+      @for (invitation of invitations(); track invitation.id) {
+        <ion-card
+          ><ion-card-header
+            ><ion-card-title>{{ invitation.band?.name }}</ion-card-title></ion-card-header
+          ><ion-card-content>
+            <p>Rol propuesto: {{ invitation.role }}</p>
+            <ion-button size="small" (click)="respond(invitation.id, true)">Aceptar</ion-button>
+            <ion-button size="small" fill="outline" (click)="respond(invitation.id, false)"
+              >Rechazar</ion-button
+            >
+          </ion-card-content></ion-card
+        >
+      }
+    }
+    <h2>Mis proyectos</h2>
+    @for (band of bands(); track band.id) {
+      <ion-card
+        ><ion-card-header
+          ><ion-card-title>{{ band.name }}</ion-card-title></ion-card-header
+        ><ion-card-content>
+          <p>{{ band.genres.join(' · ') }}</p>
+          <ion-button size="small" [routerLink]="['/profile/bands', band.id]">Editar</ion-button>
+          <ion-button
+            size="small"
+            fill="outline"
+            [routerLink]="['/profile/bands', band.id, 'members']"
+            >Integrantes</ion-button
+          >
+        </ion-card-content></ion-card
+      >
+    } @empty {
+      <p>Todavía no participás en bandas o proyectos.</p>
+    }
+  </main></ion-content
+>

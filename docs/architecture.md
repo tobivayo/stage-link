@@ -2,9 +2,9 @@
 
 ## Objetivo y alcance
 
-PT-01 estableció la base reproducible y PT-02 agrega cuentas, autenticación JWT, roles,
-preferencias y autorización. Perfiles profesionales y los demás casos de uso permanecen fuera del
-alcance actual.
+PT-01 estableció la base reproducible, PT-02 agregó identidad/autenticación y PT-03 agrega perfiles,
+bandas, integrantes, privacidad y portfolio. Búsqueda y los dominios transaccionales permanecen
+fuera del alcance actual.
 
 ## Organización del monorepo
 
@@ -22,8 +22,9 @@ equipos locales instalen el mismo grafo de dependencias.
 
 La aplicación usa componentes standalone y rutas lazy. `core` queda reservado para servicios
 singleton, guards e interceptors; `shared` para UI reutilizable; y `domains` para features verticales.
-PT-02 agrega rutas públicas de login/registro y un shell privado con dashboard y configuración de
-roles/preferencias. Son pantallas funcionales mínimas, no el diseño final del producto.
+Las rutas lazy incluyen login/registro, dashboard, configuración, perfiles profesionales, bandas,
+integrantes y portfolio. La ruta pública de perfil queda fuera del guard de sesión. Son pantallas
+funcionales mínimas, no el diseño final del producto.
 
 El tema parte de `#252323` como fondo oscuro, `#D0E114` como primario y `#ED7D3A` como secundario.
 Se contemplan safe areas y tamaños fluidos para una experiencia mobile first. Capacitor está
@@ -47,8 +48,8 @@ Las piezas transversales actuales son:
 - `health`: `GET /health`, con estado del proceso y conectividad de PostgreSQL.
 - `common/auth`: guard JWT, autorización declarativa por roles y usuario actual.
 
-`auth`, `users`, `roles` y `user-preferences` son los únicos módulos funcionales de PT-02. Los demás
-módulos de negocio son placeholders deliberados y no exponen endpoints.
+`auth`, `users`, `roles`, `user-preferences`, `profiles`, `bands` y `portfolio` son funcionales. Los
+demás módulos de negocio son placeholders deliberados y no exponen endpoints.
 
 Los límites iniciales son `users`, `auth`, `roles`, `profiles`, `bands`, `venues`, `providers`,
 `calls`, `events`, `rehearsals`, `chat`, `marketplace`, `ratings`, `reports`, `admin` y `audit`. Crear
@@ -69,6 +70,10 @@ reportes y auditoría. El detalle se encuentra en [database-design.md](database-
 SQL para exigir exactamente un destino, puntuaciones entre 1 y 10, rangos de fechas válidos y precios
 no negativos. La futura capa de aplicación deberá repetir estas reglas para devolver errores de
 dominio claros antes de llegar a la base de datos.
+
+La privacidad se aplica en el mapper de salida: primero se valida que el perfil esté activo y sea
+visible para el visitante; luego se filtran ubicación, contacto, links y portfolio por `Visibility`.
+Ownership se resuelve con `userId` para músico y `ownerUserId` para banda, venue y proveedor.
 
 ## Autenticación y seguridad
 
@@ -96,12 +101,11 @@ formato, corre tests, ejecuta lint y compila los workspaces. No existe ningún p
 
 ## Próximos paquetes sugeridos
 
-1. **PT-03:** perfiles de músico, venue y proveedor; completar roles pendientes.
-2. Bandas, membresías e invitaciones.
-3. Convocatorias, postulaciones, eventos y ensayos.
-4. Chat en tiempo real y notificaciones.
-5. Marketplace, calificaciones, reportes y herramientas administrativas.
-6. Observabilidad, recuperación de cuenta, refresh/revocación, hardening y despliegue.
+1. **PT-04:** búsqueda y recomendación de perfiles visibles.
+2. Convocatorias, postulaciones, eventos y ensayos.
+3. Chat en tiempo real y notificaciones.
+4. Marketplace, calificaciones, reportes y herramientas administrativas.
+5. Observabilidad, recuperación de cuenta, refresh/revocación, hardening y despliegue.
 
 Cada paquete debería agregar tests unitarios e integrales, migraciones propias y contratos públicos
 en `packages/shared` solo cuando exista más de un consumidor real.

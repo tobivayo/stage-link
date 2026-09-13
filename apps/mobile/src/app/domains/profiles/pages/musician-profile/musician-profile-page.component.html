@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/profile" /></ion-buttons>
+    <ion-title>Perfil músico</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <main class="page-shell">
+    @if (loading()) {
+      <ion-spinner />
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-stack">
+        <ion-item
+          ><ion-input label="Nombre artístico" labelPlacement="stacked" formControlName="stageName"
+        /></ion-item>
+        <ion-item
+          ><ion-textarea label="Bio musical" labelPlacement="stacked" formControlName="bio"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            label="Instrumentos (separados por coma)"
+            labelPlacement="stacked"
+            formControlName="instruments"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            label="Géneros (separados por coma)"
+            labelPlacement="stacked"
+            formControlName="genres"
+        /></ion-item>
+        <ion-item
+          ><ion-input label="Influencias" labelPlacement="stacked" formControlName="influences"
+        /></ion-item>
+        <ion-item
+          ><ion-textarea label="Experiencia" labelPlacement="stacked" formControlName="experience"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            label="Proyectos anteriores"
+            labelPlacement="stacked"
+            formControlName="previousProjects"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            label="Ubicación o zona"
+            labelPlacement="stacked"
+            formControlName="locationText"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            type="url"
+            label="URL de foto"
+            labelPlacement="stacked"
+            formControlName="photoUrl"
+        /></ion-item>
+        <ion-item
+          ><ion-toggle formControlName="availableForProjects"
+            >Disponible para proyectos</ion-toggle
+          ></ion-item
+        >
+        <ion-item
+          ><ion-toggle formControlName="isSoloProject"
+            >Actúo como proyecto individual</ion-toggle
+          ></ion-item
+        >
+        <ion-item>
+          <ion-select label="Visibilidad del perfil" formControlName="visibility">
+            @for (item of visibility; track item) {
+              <ion-select-option [value]="item">{{ item }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-select label="Visibilidad de ubicación" formControlName="locationVisibility">
+            @for (item of visibility; track item) {
+              <ion-select-option [value]="item">{{ item }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item
+          ><ion-input
+            label="Etiqueta de enlace"
+            labelPlacement="stacked"
+            formControlName="linkLabel"
+        /></ion-item>
+        <ion-item
+          ><ion-input
+            type="url"
+            label="URL externa"
+            labelPlacement="stacked"
+            formControlName="linkUrl"
+        /></ion-item>
+        <ion-button type="submit" expand="block" [disabled]="saving()">Guardar perfil</ion-button>
+      </form>
+      <ion-button fill="clear" routerLink="/profile/portfolio">Gestionar portfolio</ion-button>
+      @if (message()) {
+        <p class="status" role="status">{{ message() }}</p>
+      }
+    }
+  </main>
+</ion-content>

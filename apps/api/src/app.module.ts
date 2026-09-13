@@ -13,6 +13,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { EventsModule } from './modules/events/events.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ProvidersModule } from './modules/providers/providers.module';
 import { RatingsModule } from './modules/ratings/ratings.module';
 import { RehearsalsModule } from './modules/rehearsals/rehearsals.module';
@@ -32,6 +33,7 @@ import { VenuesModule } from './modules/venues/venues.module';
     RolesModule,
     UserPreferencesModule,
     ProfilesModule,
+    PortfolioModule,
     BandsModule,
     VenuesModule,
     ProvidersModule,

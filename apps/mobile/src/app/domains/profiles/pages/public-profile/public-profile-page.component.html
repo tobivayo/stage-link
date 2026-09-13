@@ -1,0 +1,32 @@
+<ion-header
+  ><ion-toolbar color="dark"><ion-title>StageLink</ion-title></ion-toolbar></ion-header
+><ion-content
+  ><main class="page-shell">
+    @if (error()) {
+      <p class="error">Este perfil no existe o no es visible para vos.</p>
+    } @else if (!profile()) {
+      <ion-spinner />
+    } @else if (profile(); as item) {
+      <p class="eyebrow">Vista {{ item.view }}</p>
+      <h1>{{ item.name }}</h1>
+      <p>{{ item.bio || item.description }}</p>
+      @if (item.genres?.length) {
+        <p>{{ item.genres.join(' · ') }}</p>
+      }
+      @if (item.instruments?.length) {
+        <p>Instrumentos: {{ item.instruments.join(', ') }}</p>
+      }
+      @if (item.serviceTags?.length) {
+        <p>Servicios: {{ item.serviceTags.join(', ') }}</p>
+      }
+      @if (item.locationText) {
+        <p>Zona: {{ item.locationText }}</p>
+      }
+      @for (link of item.links || []; track link.url) {
+        <p>
+          <a [href]="link.url" target="_blank" rel="noopener">{{ link.label }}</a>
+        </p>
+      }
+    }
+  </main></ion-content
+>
