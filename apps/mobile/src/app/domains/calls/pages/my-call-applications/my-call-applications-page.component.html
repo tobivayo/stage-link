@@ -1,0 +1,43 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Mis postulaciones</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (application of items(); track application.id) {
+      <article class="card">
+        <p class="status">{{ application.status }}</p>
+        <h2>{{ application.call.title }}</h2>
+        <p>{{ application.call.proposedDateTime | date: 'medium' }}</p>
+        <div class="actions">
+          <ion-button size="small" [routerLink]="['/calls', application.call.id]">Ver</ion-button>
+          @if (
+            application.status === 'PENDING' ||
+            application.status === 'REVIEWED' ||
+            application.status === 'PRESELECTED'
+          ) {
+            <ion-button
+              size="small"
+              color="danger"
+              fill="outline"
+              (click)="withdraw(application.id)"
+              >Retirar</ion-button
+            >
+          }
+        </div>
+      </article>
+    } @empty {
+      @if (!loading()) {
+        <p>No tenés postulaciones.</p>
+      }
+    }
+  </main></ion-content
+>

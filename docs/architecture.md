@@ -51,8 +51,9 @@ Las piezas transversales actuales son:
 - `common/auth`: guard JWT, autorización declarativa por roles y usuario actual.
 
 `auth`, `users`, `roles`, `user-preferences`, `profiles`, `bands`, `portfolio`, `musician-search`,
-`recommendations`, `member-searches`, `member-search-applications` y `contact-intents` son
-funcionales. Los demás módulos de negocio son placeholders deliberados y no exponen endpoints.
+`recommendations`, `member-searches`, `member-search-applications`, `contact-intents`, `calls`,
+`call-applications`, `call-selection` y `call-confirmations` son funcionales. Los demás módulos de
+negocio son placeholders deliberados y no exponen endpoints.
 
 Los límites iniciales son `users`, `auth`, `roles`, `profiles`, `bands`, `venues`, `providers`,
 `calls`, `events`, `rehearsals`, `chat`, `marketplace`, `ratings`, `reports`, `admin` y `audit`. Crear
@@ -109,11 +110,10 @@ formato, corre tests, ejecuta lint y compila los workspaces. No existe ningún p
 
 ## Próximos paquetes sugeridos
 
-1. **PT-05:** convocatorias y postulantes sobre `Call`/`Application`.
-2. Eventos y ensayos.
-3. Chat en tiempo real y notificaciones.
-4. Marketplace, calificaciones, reportes y herramientas administrativas.
-5. Observabilidad, recuperación de cuenta, refresh/revocación, hardening y despliegue.
+1. **PT-06:** eventos, calendario y ensayos desde convocatorias completadas.
+2. Chat en tiempo real y notificaciones.
+3. Marketplace, calificaciones, reportes y herramientas administrativas.
+4. Observabilidad, recuperación de cuenta, refresh/revocación, hardening y despliegue.
 
 Cada paquete debería agregar tests unitarios e integrales, migraciones propias y contratos públicos
 en `packages/shared` solo cuando exista más de un consumidor real.

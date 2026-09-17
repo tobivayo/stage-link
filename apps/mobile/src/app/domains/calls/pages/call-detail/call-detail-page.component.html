@@ -1,0 +1,129 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Convocatoria</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @if (success()) {
+      <p class="status">{{ success() }}</p>
+    }
+    @if (call(); as item) {
+      <article class="card">
+        <p class="status">{{ item.status }} · {{ item.type }}</p>
+        <h1>{{ item.title }}</h1>
+        <p>{{ item.description }}</p>
+        <p class="meta">{{ item.proposedDateTime | date: 'full' }}</p>
+        <p>{{ item.locationText || 'Ubicación a confirmar' }} · {{ item.genres.join(', ') }}</p>
+        <p>Cupos: {{ item.maxSelectedApplicants }}</p>
+        @if (item.offeredConditions) {
+          <p><strong>Condiciones:</strong> {{ item.offeredConditions }}</p>
+        }
+        @if (item.estimatedPayment) {
+          <p><strong>Cachet estimado:</strong> {{ item.estimatedPayment }} {{ item.currency }}</p>
+        }
+        @if (item.technicalRequirements) {
+          <p><strong>Requisitos técnicos:</strong> {{ item.technicalRequirements }}</p>
+        }
+      </article>
+      @if (item.isOwner) {
+        <section class="card" [formGroup]="managementForm">
+          <h2>Gestión</h2>
+          <ion-item
+            ><ion-input label="Motivo opcional" labelPlacement="stacked" formControlName="reason"
+          /></ion-item>
+          <div class="actions">
+            @if (item.status === 'OPEN' || item.status === 'IN_REVIEW') {
+              <ion-button [routerLink]="['/calls', item.id, 'edit']">Editar</ion-button>
+              <ion-button [routerLink]="['/calls', item.id, 'applications']"
+                >Postulantes</ion-button
+              >
+              <ion-button fill="outline" (click)="changeStatus('IN_REVIEW')"
+                >En revisión</ion-button
+              >
+              <ion-button fill="outline" (click)="changeStatus('CLOSED')">Cerrar</ion-button>
+              <ion-button color="danger" fill="outline" (click)="cancel()">Cancelar</ion-button>
+            }
+            @if (item.status === 'CLOSED' || item.status === 'CANCELLED') {
+              <ion-button (click)="reopen('OPEN')">Reabrir</ion-button>
+              <ion-button fill="outline" (click)="reopen('IN_REVIEW')"
+                >Volver a revisión</ion-button
+              >
+            }
+          </div>
+        </section>
+      } @else if (auth.user() && item.status === 'OPEN') {
+        <form class="card" [formGroup]="applyForm" (ngSubmit)="apply()">
+          <h2>Postularme</h2>
+          <ion-item
+            ><ion-select label="Postulante" labelPlacement="stacked" formControlName="applicantType"
+              ><ion-select-option value="MUSICIAN">Músico individual</ion-select-option
+              ><ion-select-option value="BAND_PROJECT"
+                >Banda/proyecto</ion-select-option
+              ></ion-select
+            ></ion-item
+          >
+          @if (applyForm.controls.applicantType.value === 'BAND_PROJECT') {
+            <ion-item
+              ><ion-select label="Banda" labelPlacement="stacked" formControlName="bandProjectId">
+                @for (band of bands(); track band.id) {
+                  <ion-select-option [value]="band.id">{{ band.name }}</ion-select-option>
+                }
+              </ion-select></ion-item
+            >
+          }
+          <ion-item
+            ><ion-textarea label="Mensaje" labelPlacement="stacked" formControlName="message"
+          /></ion-item>
+          <ion-item
+            ><ion-textarea
+              label="Necesidades técnicas"
+              labelPlacement="stacked"
+              formControlName="technicalNeeds"
+          /></ion-item>
+          <ion-item
+            ><ion-input
+              type="number"
+              label="Cachet solicitado"
+              labelPlacement="stacked"
+              formControlName="requestedPayment"
+          /></ion-item>
+          <ion-item
+            ><ion-input label="Moneda" labelPlacement="stacked" formControlName="currency"
+          /></ion-item>
+          <ion-button type="submit" [disabled]="loading()">Enviar postulación</ion-button>
+        </form>
+      } @else if (!auth.user() && item.status === 'OPEN') {
+        <section class="card">
+          <p>Iniciá sesión para postularte.</p>
+          <ion-button routerLink="/auth/login">Iniciar sesión</ion-button>
+        </section>
+      }
+      @if (myConfirmation(); as confirmation) {
+        <section class="card" [formGroup]="managementForm">
+          <h2>Confirmación de fecha</h2>
+          <p class="status">{{ confirmation.status }}</p>
+          @if (confirmation.status === 'PENDING_CONFIRMATION') {
+            <ion-item
+              ><ion-input
+                label="Motivo si rechazás"
+                labelPlacement="stacked"
+                formControlName="reason"
+            /></ion-item>
+            <div class="actions">
+              <ion-button (click)="confirm()">Confirmar</ion-button
+              ><ion-button color="danger" fill="outline" (click)="decline()">Rechazar</ion-button>
+            </div>
+          }
+        </section>
+      }
+    }
+  </main>
+</ion-content>

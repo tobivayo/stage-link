@@ -8,6 +8,9 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BandsModule } from './modules/bands/bands.module';
+import { CallApplicationsModule } from './modules/call-applications/call-applications.module';
+import { CallConfirmationsModule } from './modules/call-confirmations/call-confirmations.module';
+import { CallSelectionModule } from './modules/call-selection/call-selection.module';
 import { CallsModule } from './modules/calls/calls.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { ContactIntentsModule } from './modules/contact-intents/contact-intents.module';
@@ -48,6 +51,9 @@ import { VenuesModule } from './modules/venues/venues.module';
     VenuesModule,
     ProvidersModule,
     CallsModule,
+    CallApplicationsModule,
+    CallSelectionModule,
+    CallConfirmationsModule,
     EventsModule,
     RehearsalsModule,
     ChatModule,

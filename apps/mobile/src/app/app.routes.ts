@@ -23,6 +23,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'public/calls',
+    loadComponent: () =>
+      import('./domains/calls/pages/calls-list/calls-list-page.component').then(
+        (m) => m.CallsListPageComponent,
+      ),
+  },
+  {
+    path: 'public/calls/:id',
+    loadComponent: () =>
+      import('./domains/calls/pages/call-detail/call-detail-page.component').then(
+        (m) => m.CallDetailPageComponent,
+      ),
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./layout/shell/shell.component').then((m) => m.ShellComponent),
@@ -39,6 +53,83 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./domains/settings/pages/role-preferences/role-preferences-page.component').then(
             (m) => m.RolePreferencesPageComponent,
+          ),
+      },
+      {
+        path: 'calls/new',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-editor/call-editor-page.component').then(
+            (m) => m.CallEditorPageComponent,
+          ),
+      },
+      {
+        path: 'calls/my',
+        loadComponent: () =>
+          import('./domains/calls/pages/my-calls/my-calls-page.component').then(
+            (m) => m.MyCallsPageComponent,
+          ),
+      },
+      {
+        path: 'my-call-applications',
+        loadComponent: () =>
+          import('./domains/calls/pages/my-call-applications/my-call-applications-page.component').then(
+            (m) => m.MyCallApplicationsPageComponent,
+          ),
+      },
+      {
+        path: 'calls',
+        loadComponent: () =>
+          import('./domains/calls/pages/calls-list/calls-list-page.component').then(
+            (m) => m.CallsListPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/edit',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-editor/call-editor-page.component').then(
+            (m) => m.CallEditorPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/applications/:applicationId',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-applications/call-applications-page.component').then(
+            (m) => m.CallApplicationsPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/applications',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-applications/call-applications-page.component').then(
+            (m) => m.CallApplicationsPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/selection',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-applications/call-applications-page.component').then(
+            (m) => m.CallApplicationsPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/apply',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-detail/call-detail-page.component').then(
+            (m) => m.CallDetailPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id/confirmation',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-detail/call-detail-page.component').then(
+            (m) => m.CallDetailPageComponent,
+          ),
+      },
+      {
+        path: 'calls/:id',
+        loadComponent: () =>
+          import('./domains/calls/pages/call-detail/call-detail-page.component').then(
+            (m) => m.CallDetailPageComponent,
           ),
       },
       { path: 'search', pathMatch: 'full', redirectTo: 'search/musicians' },

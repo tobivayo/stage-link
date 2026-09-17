@@ -162,10 +162,40 @@ enum CallStatus {
 
 enum ApplicationStatus {
   PENDING
-  IN_REVIEW
-  ACCEPTED
+  REVIEWED
+  PRESELECTED
+  SELECTED
   REJECTED
+  CANCELLED
   WITHDRAWN
+}
+
+enum CallConfirmationStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  DECLINED
+}
+
+enum CallApplicantType {
+  MUSICIAN
+  BAND_PROJECT
+}
+
+enum CallOrganizerType {
+  USER
+  MUSICIAN
+  BAND_PROJECT
+  VENUE
+  PRODUCER
+}
+
+enum CallType {
+  VENUE_DATE
+  FESTIVAL
+  SUPPORT_BAND
+  PRIVATE_EVENT
+  COLLABORATION
+  OTHER
 }
 
 enum RehearsalStatus {
@@ -282,6 +312,8 @@ model User {
   eventParticipations         EventParticipant[]
   createdCalls                Call[]                           @relation("CallCreator")
   submittedApplications       Application[]                    @relation("ApplicationSubmitter")
+  callConfirmations           CallConfirmation[]
+  callStatusChanges           CallStatusHistory[]
   organizedRehearsals         Rehearsal[]                      @relation("RehearsalOrganizer")
   rehearsalParticipations     RehearsalParticipant[]
   createdConversations        ChatConversation[]               @relation("ConversationCreator")
@@ -375,6 +407,7 @@ model MusicianProfile {
   portfolioItems           PortfolioItem[]
   portfolioShares          PortfolioItemShare[]
   applications             Application[]
+  organizedCalls           Call[]
   ratings                  Rating[]
   memberSearches           MemberSearch[]
   memberSearchApplications MemberSearchApplication[]
@@ -795,29 +828,50 @@ model EventParticipant {
 }
 
 model Call {
-  id             String             @id @default(uuid()) @db.Uuid
-  creatorUserId  String             @db.Uuid
-  bandProjectId  String?            @db.Uuid
-  venueProfileId String?            @db.Uuid
-  eventId        String?            @db.Uuid
-  title          String
-  description    String
-  requirements   String?
-  closesAt       DateTime?
-  visibility     Visibility         @default(PUBLIC)
-  status         CallStatus         @default(OPEN)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  deletedAt      DateTime?
-  creator        User               @relation("CallCreator", fields: [creatorUserId], references: [id], onDelete: Restrict)
-  bandProject    BandProject?       @relation(fields: [bandProjectId], references: [id], onDelete: SetNull)
-  venueProfile   VenueProfile?      @relation(fields: [venueProfileId], references: [id], onDelete: SetNull)
-  event          Event?             @relation(fields: [eventId], references: [id], onDelete: SetNull)
-  applications   Application[]
-  conversations  ChatConversation[]
+  id                    String             @id @default(uuid()) @db.Uuid
+  creatorUserId         String             @db.Uuid
+  musicianProfileId     String?            @db.Uuid
+  bandProjectId         String?            @db.Uuid
+  venueProfileId        String?            @db.Uuid
+  eventId               String?            @db.Uuid
+  organizerType         CallOrganizerType
+  type                  CallType
+  title                 String
+  description           String
+  eventName             String?
+  proposedDateTime      DateTime
+  closesAt              DateTime?
+  locationText          String?
+  genres                String[]
+  preferredStyles       String[]
+  maxSelectedApplicants Int                @default(1)
+  offeredConditions     String?
+  estimatedPayment      Decimal?           @db.Decimal(12, 2)
+  currency              String?            @db.Char(3)
+  technicalRequirements String?
+  visibility            Visibility         @default(PUBLIC)
+  status                CallStatus         @default(OPEN)
+  closedAt              DateTime?
+  completedAt           DateTime?
+  cancelledAt           DateTime?
+  cancellationReason    String?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  deletedAt             DateTime?
+  creator               User               @relation("CallCreator", fields: [creatorUserId], references: [id], onDelete: Restrict)
+  musicianProfile       MusicianProfile?   @relation(fields: [musicianProfileId], references: [id], onDelete: SetNull)
+  bandProject           BandProject?       @relation(fields: [bandProjectId], references: [id], onDelete: SetNull)
+  venueProfile          VenueProfile?      @relation(fields: [venueProfileId], references: [id], onDelete: SetNull)
+  event                 Event?             @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  applications          Application[]
+  confirmations         CallConfirmation[]
+  statusHistory         CallStatusHistory[]
+  conversations         ChatConversation[]
 
-  @@index([status, closesAt])
+  @@index([status, visibility, proposedDateTime])
+  @@index([type, status])
   @@index([creatorUserId])
+  @@index([musicianProfileId])
   @@index([bandProjectId])
   @@index([venueProfileId])
   @@index([eventId])
@@ -825,30 +879,75 @@ model Call {
 }
 
 model Application {
-  id                String            @id @default(uuid()) @db.Uuid
-  callId            String            @db.Uuid
-  submittedByUserId String            @db.Uuid
-  musicianProfileId String?           @db.Uuid
-  bandProjectId     String?           @db.Uuid
+  id                String               @id @default(uuid()) @db.Uuid
+  callId            String               @db.Uuid
+  submittedByUserId String               @db.Uuid
+  applicantType     CallApplicantType
+  musicianProfileId String?              @db.Uuid
+  bandProjectId     String?              @db.Uuid
   message           String?
-  status            ApplicationStatus @default(PENDING)
+  technicalNeeds    String?
+  requestedPayment  Decimal?             @db.Decimal(12, 2)
+  currency          String?              @db.Char(3)
+  status            ApplicationStatus    @default(PENDING)
   reviewedAt        DateTime?
+  preselectedAt     DateTime?
   selectedAt        DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  rejectedAt        DateTime?
+  cancelledAt       DateTime?
+  withdrawnAt       DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
   deletedAt         DateTime?
-  call              Call              @relation(fields: [callId], references: [id], onDelete: Cascade)
-  submittedBy       User              @relation("ApplicationSubmitter", fields: [submittedByUserId], references: [id], onDelete: Restrict)
-  musicianProfile   MusicianProfile?  @relation(fields: [musicianProfileId], references: [id], onDelete: Cascade)
-  bandProject       BandProject?      @relation(fields: [bandProjectId], references: [id], onDelete: Cascade)
+  call              Call                 @relation(fields: [callId], references: [id], onDelete: Cascade)
+  submittedBy       User                 @relation("ApplicationSubmitter", fields: [submittedByUserId], references: [id], onDelete: Restrict)
+  musicianProfile   MusicianProfile?     @relation(fields: [musicianProfileId], references: [id], onDelete: Cascade)
+  bandProject       BandProject?         @relation(fields: [bandProjectId], references: [id], onDelete: Cascade)
+  confirmation      CallConfirmation?
   eventParticipant  EventParticipant?
   ratings           Rating[]
 
+  @@unique([callId, musicianProfileId])
+  @@unique([callId, bandProjectId])
   @@index([callId, status])
   @@index([submittedByUserId])
   @@index([musicianProfileId])
   @@index([bandProjectId])
   @@index([deletedAt])
+}
+
+model CallConfirmation {
+  id              String                 @id @default(uuid()) @db.Uuid
+  callId          String                 @db.Uuid
+  applicationId   String                 @unique @db.Uuid
+  confirmerUserId String                 @db.Uuid
+  status          CallConfirmationStatus @default(PENDING_CONFIRMATION)
+  confirmedAt     DateTime?
+  declinedAt      DateTime?
+  declineReason   String?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  call            Call                   @relation(fields: [callId], references: [id], onDelete: Cascade)
+  application     Application            @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  confirmer       User                   @relation(fields: [confirmerUserId], references: [id], onDelete: Restrict)
+
+  @@index([callId, status])
+  @@index([confirmerUserId, status])
+}
+
+model CallStatusHistory {
+  id              String      @id @default(uuid()) @db.Uuid
+  callId          String      @db.Uuid
+  previousStatus  CallStatus?
+  newStatus       CallStatus
+  changedByUserId String      @db.Uuid
+  reason          String?
+  createdAt       DateTime    @default(now())
+  call            Call        @relation(fields: [callId], references: [id], onDelete: Cascade)
+  changedBy       User        @relation(fields: [changedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([callId, createdAt])
+  @@index([changedByUserId])
 }
 
 model Rehearsal {

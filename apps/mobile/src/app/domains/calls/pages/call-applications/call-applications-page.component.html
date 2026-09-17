@@ -1,0 +1,90 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Postulantes</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <form class="filters" [formGroup]="form" (ngSubmit)="load()">
+      <ion-item
+        ><ion-select label="Estado" labelPlacement="stacked" formControlName="status"
+          ><ion-select-option value="">Todos</ion-select-option
+          ><ion-select-option value="PENDING">Pendiente</ion-select-option
+          ><ion-select-option value="REVIEWED">Revisado</ion-select-option
+          ><ion-select-option value="PRESELECTED">Preseleccionado</ion-select-option
+          ><ion-select-option value="SELECTED">Seleccionado</ion-select-option
+          ><ion-select-option value="REJECTED">Rechazado</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-select label="Tipo" labelPlacement="stacked" formControlName="applicantType"
+          ><ion-select-option value="">Todos</ion-select-option
+          ><ion-select-option value="MUSICIAN">Músico</ion-select-option
+          ><ion-select-option value="BAND_PROJECT">Banda</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-input label="Género" labelPlacement="stacked" formControlName="genre"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Motivo opcional" labelPlacement="stacked" formControlName="reason"
+      /></ion-item>
+      <div class="actions">
+        <ion-button type="submit">Filtrar</ion-button
+        ><ion-button type="button" (click)="select()" [disabled]="selectedIds().size === 0"
+          >Selección final</ion-button
+        >
+      </div>
+    </form>
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (application of items(); track application.id) {
+      <article class="card">
+        <ion-checkbox
+          [checked]="selectedIds().has(application.id)"
+          (ionChange)="toggle(application.id, $event.detail.checked)"
+          >Seleccionar</ion-checkbox
+        >
+        <p class="status">{{ application.status }} · {{ application.applicantType }}</p>
+        <h2>{{ application.applicant?.name }}</h2>
+        <p>
+          {{ application.applicant?.genres?.join(', ') }} ·
+          {{ application.applicant?.instruments?.join(', ') }}
+        </p>
+        <p>{{ application.message || 'Sin mensaje' }}</p>
+        @if (application.applicant?.portfolio?.length) {
+          <p class="meta">Portfolio: {{ application.applicant.portfolio.length }} elementos</p>
+        }
+        <div class="actions">
+          @if (application.status === 'PENDING') {
+            <ion-button size="small" (click)="action(application.id, 'review')"
+              >Revisada</ion-button
+            >
+          }
+          @if (application.status === 'PENDING' || application.status === 'REVIEWED') {
+            <ion-button size="small" (click)="action(application.id, 'preselect')"
+              >Preseleccionar</ion-button
+            >
+          }
+          @if (application.status === 'PRESELECTED') {
+            <ion-button
+              size="small"
+              fill="outline"
+              (click)="action(application.id, 'remove-preselection')"
+              >Quitar preselección</ion-button
+            >
+          }
+        </div>
+      </article>
+    } @empty {
+      @if (!loading()) {
+        <p>No hay postulantes para estos filtros.</p>
+      }
+    }
+  </main></ion-content
+>

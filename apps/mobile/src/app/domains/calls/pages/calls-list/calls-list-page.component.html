@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start"><ion-back-button /></ion-buttons>
+    <ion-title>Convocatorias</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <main class="page-shell">
+    <form class="filters" [formGroup]="form" (ngSubmit)="search()">
+      <ion-item
+        ><ion-input label="Género" labelPlacement="stacked" formControlName="genre"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Zona" labelPlacement="stacked" formControlName="location"
+      /></ion-item>
+      <ion-item>
+        <ion-select label="Tipo" labelPlacement="stacked" formControlName="type">
+          <ion-select-option value="">Todos</ion-select-option>
+          <ion-select-option value="VENUE_DATE">Fecha en venue</ion-select-option>
+          <ion-select-option value="FESTIVAL">Festival</ion-select-option>
+          <ion-select-option value="SUPPORT_BAND">Banda soporte</ion-select-option>
+          <ion-select-option value="PRIVATE_EVENT">Evento privado</ion-select-option>
+          <ion-select-option value="COLLABORATION">Colaboración</ion-select-option>
+          <ion-select-option value="OTHER">Otra</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-select label="Estado" labelPlacement="stacked" formControlName="status">
+          <ion-select-option value="OPEN">Abierta</ion-select-option>
+          <ion-select-option value="IN_REVIEW">En revisión</ion-select-option>
+          <ion-select-option value="CLOSED">Cerrada</ion-select-option>
+          <ion-select-option value="COMPLETED">Completada</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="actions">
+        <ion-button type="submit" [disabled]="loading()">Filtrar</ion-button>
+        <ion-button fill="outline" routerLink="/calls/new">Crear convocatoria</ion-button>
+        <ion-button fill="clear" routerLink="/calls/my">Mis convocatorias</ion-button>
+      </div>
+    </form>
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (call of items(); track call.id) {
+      <article class="card">
+        <p class="status">{{ call.status }} · {{ call.type }}</p>
+        <h2>{{ call.title }}</h2>
+        <p>{{ call.description }}</p>
+        <p class="meta">
+          {{ call.proposedDateTime | date: 'medium' }} ·
+          {{ call.locationText || 'Ubicación a confirmar' }}
+        </p>
+        <p>{{ call.genres.join(', ') }}</p>
+        <ion-button size="small" [routerLink]="['/public/calls', call.id]"
+          >Ver convocatoria</ion-button
+        >
+      </article>
+    } @empty {
+      @if (searched() && !loading()) {
+        <p>No hay convocatorias para estos filtros.</p>
+      }
+    }
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (hasMore() && !loading()) {
+      <ion-button fill="outline" (click)="loadMore()">Cargar más</ion-button>
+    }
+  </main>
+</ion-content>

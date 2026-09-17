@@ -1,0 +1,42 @@
+.page-shell {
+  display: grid;
+  gap: 1rem;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.filters,
+.card {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--ion-color-primary) 30%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ion-color-dark) 94%, white);
+}
+
+.card h1,
+.card h2,
+.card p {
+  margin: 0;
+}
+
+.meta {
+  color: var(--ion-color-medium);
+}
+
+.status {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.error {
+  color: var(--ion-color-danger);
+}

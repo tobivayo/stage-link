@@ -1,0 +1,135 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>{{ id ? 'Editar' : 'Crear' }} convocatoria</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <form class="filters" [formGroup]="form" (ngSubmit)="submit()">
+      <ion-item
+        ><ion-select label="Organiza como" labelPlacement="stacked" formControlName="organizerType"
+          ><ion-select-option value="MUSICIAN">Músico</ion-select-option
+          ><ion-select-option value="BAND_PROJECT">Banda/proyecto</ion-select-option
+          ><ion-select-option value="VENUE">Venue</ion-select-option
+          ><ion-select-option value="USER">Organizador</ion-select-option></ion-select
+        ></ion-item
+      >
+      @if (form.controls.organizerType.value === 'BAND_PROJECT') {
+        <ion-item
+          ><ion-select label="Banda" labelPlacement="stacked" formControlName="organizerProfileId">
+            @for (band of bands(); track band.id) {
+              <ion-select-option [value]="band.id">{{ band.name }}</ion-select-option>
+            }
+          </ion-select></ion-item
+        >
+      }
+      @if (form.controls.organizerType.value === 'VENUE') {
+        <ion-item
+          ><ion-select label="Venue" labelPlacement="stacked" formControlName="organizerProfileId">
+            @for (venue of venues(); track venue.id) {
+              <ion-select-option [value]="venue.id">{{ venue.name }}</ion-select-option>
+            }
+          </ion-select></ion-item
+        >
+      }
+      <ion-item
+        ><ion-select label="Tipo" labelPlacement="stacked" formControlName="type"
+          ><ion-select-option value="VENUE_DATE">Fecha en venue</ion-select-option
+          ><ion-select-option value="FESTIVAL">Festival</ion-select-option
+          ><ion-select-option value="SUPPORT_BAND">Banda soporte</ion-select-option
+          ><ion-select-option value="PRIVATE_EVENT">Evento privado</ion-select-option
+          ><ion-select-option value="COLLABORATION">Colaboración</ion-select-option
+          ><ion-select-option value="OTHER">Otra</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-input label="Título" labelPlacement="stacked" formControlName="title"
+      /></ion-item>
+      <ion-item
+        ><ion-textarea label="Descripción" labelPlacement="stacked" formControlName="description"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Nombre del evento" labelPlacement="stacked" formControlName="eventName"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="datetime-local"
+          label="Fecha propuesta"
+          labelPlacement="stacked"
+          formControlName="proposedDateTime"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="datetime-local"
+          label="Cierre de postulaciones"
+          labelPlacement="stacked"
+          formControlName="closesAt"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          label="Ubicación o zona"
+          labelPlacement="stacked"
+          formControlName="locationText"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          label="Géneros (separados por coma)"
+          labelPlacement="stacked"
+          formControlName="genres"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          label="Estilos preferidos"
+          labelPlacement="stacked"
+          formControlName="preferredStyles"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="number"
+          label="Cupos"
+          labelPlacement="stacked"
+          formControlName="maxSelectedApplicants"
+      /></ion-item>
+      <ion-item
+        ><ion-textarea
+          label="Condiciones ofrecidas"
+          labelPlacement="stacked"
+          formControlName="offeredConditions"
+      /></ion-item>
+      <ion-item
+        ><ion-input
+          type="number"
+          label="Cachet estimado"
+          labelPlacement="stacked"
+          formControlName="estimatedPayment"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Moneda" labelPlacement="stacked" formControlName="currency"
+      /></ion-item>
+      <ion-item
+        ><ion-textarea
+          label="Requisitos técnicos"
+          labelPlacement="stacked"
+          formControlName="technicalRequirements"
+      /></ion-item>
+      <ion-item
+        ><ion-select label="Visibilidad" labelPlacement="stacked" formControlName="visibility"
+          ><ion-select-option value="PUBLIC">Pública</ion-select-option
+          ><ion-select-option value="REGISTERED_ONLY">Solo registrados</ion-select-option
+          ><ion-select-option value="PRIVATE">Privada</ion-select-option></ion-select
+        ></ion-item
+      >
+      @if (form.invalid && form.touched) {
+        <p class="error">Revisá los campos obligatorios y sus formatos.</p>
+      }
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+      <ion-button type="submit" [disabled]="loading()">Guardar</ion-button>
+      @if (loading()) {
+        <ion-spinner />
+      }
+    </form>
+  </main>
+</ion-content>

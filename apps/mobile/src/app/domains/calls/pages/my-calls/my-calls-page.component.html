@@ -1,0 +1,37 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Mis convocatorias</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <ion-button routerLink="/calls/new">Nueva convocatoria</ion-button>
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (call of items(); track call.id) {
+      <article class="card">
+        <p class="status">{{ call.status }}</p>
+        <h2>{{ call.title }}</h2>
+        <p>{{ call.proposedDateTime | date: 'medium' }}</p>
+        <div class="actions">
+          <ion-button size="small" [routerLink]="['/calls', call.id]">Gestionar</ion-button
+          ><ion-button
+            size="small"
+            fill="outline"
+            [routerLink]="['/calls', call.id, 'applications']"
+            >Postulantes</ion-button
+          >
+        </div>
+      </article>
+    } @empty {
+      @if (!loading()) {
+        <p>Todavía no creaste convocatorias.</p>
+      }
+    }
+  </main></ion-content
+>

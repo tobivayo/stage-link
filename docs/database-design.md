@@ -20,8 +20,8 @@ Schema Language no puede representar.
   convocatorias de eventos de PT-05.
 - `MusicianRecommendationDecision` conserva interés o descarte por usuario y contexto; `ContactIntent`
   registra una intención inicial sin crear chats.
-- `Call` y `Application` permiten postulaciones de un músico o una banda y múltiples postulaciones
-  aceptadas por convocatoria.
+- `Call`, `Application`, `CallConfirmation` y `CallStatusHistory` cubren convocatoria fechada,
+  postulantes músicos/bandas, selección múltiple, aceptación de fecha y trazabilidad.
 - `Event`, `EventParticipant`, `Rehearsal` y `RehearsalParticipant` registran participantes y estados.
 - `Location` centraliza direcciones y coordenadas; la visibilidad de la dirección se configura en el
   recurso que la publica.
@@ -39,8 +39,9 @@ Schema Language no puede representar.
    proveedores.
 3. Cada postulación corresponde exactamente a `MusicianProfile` o `BandProject`. `submittedByUserId`
    conserva quién actuó por la banda.
-4. `ApplicationStatus.ACCEPTED` no es único por convocatoria, por lo que pueden seleccionarse varios
-   postulantes.
+4. `ApplicationStatus.SELECTED` puede repetirse hasta `maxSelectedApplicants`. Cada selección genera
+   una confirmación única; completar todos los cupos y confirmaciones deja la convocatoria lista para
+   PT-06.
 5. Los participantes de eventos admiten usuario, banda, venue o proveedor mediante claves foráneas
    explícitas y una restricción de exclusividad.
 6. `Location` es reutilizable. `addressVisibility` se mantiene en venue, proveedor, evento o ensayo
@@ -66,6 +67,12 @@ Schema Language no puede representar.
     comportamiento que un unique nullable de PostgreSQL no resolvería.
 18. `ContactIntent` usa destino polimórfico validado por servicio y un `targetUserId` relacional. Un
     índice parcial impide más de una intención pendiente al mismo perfil por solicitante.
+19. `Call` conserva el organizador concreto mediante relaciones opcionales verificadas por `CHECK` y
+    `organizerType`; `PRODUCER` queda reservado hasta incorporar ese rol.
+20. `Application` reutiliza el placeholder inicial y exige exactamente un músico o banda. Dos índices
+    únicos evitan postulaciones duplicadas por convocatoria.
+21. La aceptación del organizador está implícita en la fecha propuesta. `CallConfirmation` registra
+    únicamente la respuesta del seleccionado y `CallStatusHistory` registra cada transición.
 
 ## Puntos pendientes
 

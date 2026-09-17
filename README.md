@@ -2,8 +2,8 @@
 
 Plataforma mobile first para conectar músicos, bandas, venues, proveedores y organizadores. El
 repositorio contiene PT-01 (arquitectura/base técnica), PT-02 (usuarios/autenticación), PT-03
-(perfiles y bandas) y PT-04 (búsqueda, recomendación y reclutamiento). Los dominios posteriores
-continúan como placeholders.
+(perfiles y bandas), PT-04 (búsqueda, recomendación y reclutamiento) y PT-05 (convocatorias y
+postulantes). Los dominios posteriores continúan como placeholders.
 
 ## Requisitos
 
@@ -149,14 +149,19 @@ para un paquete de notificaciones.
 Los endpoints, decisiones y pruebas manuales están en
 [docs/pt-03-profiles-bands.md](docs/pt-03-profiles-bands.md).
 
-## Próximo paquete
+## Convocatorias de PT-05
 
 PT-04 implementa búsqueda paginada, recomendaciones explicables, revisión rápida, búsquedas de
 integrantes, postulaciones e intenciones de contacto. Los endpoints y pruebas manuales están en
 [docs/pt-04-search-recommendations.md](docs/pt-04-search-recommendations.md).
 
-PT-05 debería completar convocatorias y postulantes usando `Call` y `Application`, sin mezclar ese
-flujo temporal/de eventos con `MemberSearch`, que representa reclutamiento de integrantes.
+PT-05 completa `Call` y `Application` con revisión, preselección, selección múltiple, confirmación de
+fecha, cancelación, reapertura e historial. Conserva separado `MemberSearch`, que representa
+reclutamiento de integrantes. Endpoints, estados y pruebas manuales están en
+[docs/pt-05-calls-applicants.md](docs/pt-05-calls-applicants.md).
+
+El próximo paquete es PT-06: eventos, calendario y ensayos. Consumirá convocatorias completadas, pero
+PT-05 no crea eventos automáticamente.
 
 ## Documentación
 
