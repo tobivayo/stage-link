@@ -1,0 +1,33 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Mis postulaciones</ion-title></ion-toolbar
+  ></ion-header
+><ion-content
+  ><main class="page-shell">
+    @if (items(); as applications) {
+      @for (item of applications; track item.id) {
+        <article class="card">
+          <h2>{{ item.search.title }}</h2>
+          <p>{{ item.status }}</p>
+          <div class="actions">
+            <ion-button
+              size="small"
+              fill="outline"
+              [routerLink]="['/member-searches', item.search.id]"
+              >Ver búsqueda</ion-button
+            >
+            @if (item.status === 'PENDING' || item.status === 'REVIEWED') {
+              <ion-button size="small" color="secondary" (click)="cancel(item.id)"
+                >Cancelar</ion-button
+              >
+            }
+          </div>
+        </article>
+      } @empty {
+        <p>No tenés postulaciones.</p>
+      }
+    } @else {
+      <ion-spinner />
+    }</main
+></ion-content>

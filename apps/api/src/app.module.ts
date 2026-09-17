@@ -10,13 +10,18 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BandsModule } from './modules/bands/bands.module';
 import { CallsModule } from './modules/calls/calls.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { ContactIntentsModule } from './modules/contact-intents/contact-intents.module';
 import { EventsModule } from './modules/events/events.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
+import { MemberSearchApplicationsModule } from './modules/member-search-applications/member-search-applications.module';
+import { MemberSearchesModule } from './modules/member-searches/member-searches.module';
+import { MusicianSearchModule } from './modules/musician-search/musician-search.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ProvidersModule } from './modules/providers/providers.module';
 import { RatingsModule } from './modules/ratings/ratings.module';
 import { RehearsalsModule } from './modules/rehearsals/rehearsals.module';
+import { RecommendationsModule } from './modules/recommendations/recommendations.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UsersModule } from './modules/users/users.module';
@@ -35,6 +40,11 @@ import { VenuesModule } from './modules/venues/venues.module';
     ProfilesModule,
     PortfolioModule,
     BandsModule,
+    MusicianSearchModule,
+    RecommendationsModule,
+    MemberSearchesModule,
+    MemberSearchApplicationsModule,
+    ContactIntentsModule,
     VenuesModule,
     ProvidersModule,
     CallsModule,

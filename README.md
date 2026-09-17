@@ -1,8 +1,9 @@
 # StageLink
 
 Plataforma mobile first para conectar músicos, bandas, venues, proveedores y organizadores. El
-repositorio contiene PT-01 (arquitectura/base técnica), PT-02 (usuarios/autenticación) y PT-03
-(perfiles, bandas e integrantes). Los dominios posteriores continúan como placeholders.
+repositorio contiene PT-01 (arquitectura/base técnica), PT-02 (usuarios/autenticación), PT-03
+(perfiles y bandas) y PT-04 (búsqueda, recomendación y reclutamiento). Los dominios posteriores
+continúan como placeholders.
 
 ## Requisitos
 
@@ -150,8 +151,12 @@ Los endpoints, decisiones y pruebas manuales están en
 
 ## Próximo paquete
 
-PT-04 debería implementar búsqueda y recomendación sobre perfiles activos y visibles, con filtros
-por instrumentos, géneros, ubicación y disponibilidad. No debe acoplar el ranking a datos privados.
+PT-04 implementa búsqueda paginada, recomendaciones explicables, revisión rápida, búsquedas de
+integrantes, postulaciones e intenciones de contacto. Los endpoints y pruebas manuales están en
+[docs/pt-04-search-recommendations.md](docs/pt-04-search-recommendations.md).
+
+PT-05 debería completar convocatorias y postulantes usando `Call` y `Application`, sin mezclar ese
+flujo temporal/de eventos con `MemberSearch`, que representa reclutamiento de integrantes.
 
 ## Documentación
 

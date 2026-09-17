@@ -34,6 +34,15 @@
         <ion-item
           ><ion-textarea label="Experiencia" labelPlacement="stacked" formControlName="experience"
         /></ion-item>
+        <ion-item>
+          <ion-select label="Nivel de experiencia" formControlName="experienceLevel">
+            <ion-select-option value="">Sin especificar</ion-select-option>
+            <ion-select-option value="BEGINNER">Inicial</ion-select-option>
+            <ion-select-option value="INTERMEDIATE">Intermedia</ion-select-option>
+            <ion-select-option value="ADVANCED">Avanzada</ion-select-option>
+            <ion-select-option value="PROFESSIONAL">Profesional</ion-select-option>
+          </ion-select>
+        </ion-item>
         <ion-item
           ><ion-input
             label="Proyectos anteriores"

@@ -17,6 +17,9 @@
       </p>
 
       <section class="actions" aria-label="Acciones de cuenta">
+        <ion-button color="primary" routerLink="/search/musicians">Buscar músicos</ion-button>
+        <ion-button color="primary" routerLink="/recommendations">Recomendaciones</ion-button>
+        <ion-button color="primary" routerLink="/member-searches">Buscar integrantes</ion-button>
         <ion-button color="primary" routerLink="/profile">Mi perfil</ion-button>
         <ion-button color="primary" routerLink="/settings">Roles y preferencias</ion-button>
         <ion-button fill="outline" color="secondary" (click)="logout()" [disabled]="loading()">

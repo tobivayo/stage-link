@@ -3,8 +3,9 @@
 ## Objetivo y alcance
 
 PT-01 estableció la base reproducible, PT-02 agregó identidad/autenticación y PT-03 agrega perfiles,
-bandas, integrantes, privacidad y portfolio. Búsqueda y los dominios transaccionales permanecen
-fuera del alcance actual.
+bandas, integrantes, privacidad y portfolio. PT-04 agrega búsqueda, recomendaciones explicables,
+reclutamiento y contacto inicial. Los dominios transaccionales posteriores permanecen fuera del
+alcance actual.
 
 ## Organización del monorepo
 
@@ -23,8 +24,9 @@ equipos locales instalen el mismo grafo de dependencias.
 La aplicación usa componentes standalone y rutas lazy. `core` queda reservado para servicios
 singleton, guards e interceptors; `shared` para UI reutilizable; y `domains` para features verticales.
 Las rutas lazy incluyen login/registro, dashboard, configuración, perfiles profesionales, bandas,
-integrantes y portfolio. La ruta pública de perfil queda fuera del guard de sesión. Son pantallas
-funcionales mínimas, no el diseño final del producto.
+integrantes, portfolio, búsqueda de músicos, revisión de recomendaciones, búsquedas de integrantes y
+postulaciones. La ruta pública de perfil queda fuera del guard de sesión. Son pantallas funcionales
+mínimas, no el diseño final del producto.
 
 El tema parte de `#252323` como fondo oscuro, `#D0E114` como primario y `#ED7D3A` como secundario.
 Se contemplan safe areas y tamaños fluidos para una experiencia mobile first. Capacitor está
@@ -48,8 +50,9 @@ Las piezas transversales actuales son:
 - `health`: `GET /health`, con estado del proceso y conectividad de PostgreSQL.
 - `common/auth`: guard JWT, autorización declarativa por roles y usuario actual.
 
-`auth`, `users`, `roles`, `user-preferences`, `profiles`, `bands` y `portfolio` son funcionales. Los
-demás módulos de negocio son placeholders deliberados y no exponen endpoints.
+`auth`, `users`, `roles`, `user-preferences`, `profiles`, `bands`, `portfolio`, `musician-search`,
+`recommendations`, `member-searches`, `member-search-applications` y `contact-intents` son
+funcionales. Los demás módulos de negocio son placeholders deliberados y no exponen endpoints.
 
 Los límites iniciales son `users`, `auth`, `roles`, `profiles`, `bands`, `venues`, `providers`,
 `calls`, `events`, `rehearsals`, `chat`, `marketplace`, `ratings`, `reports`, `admin` y `audit`. Crear
@@ -74,6 +77,11 @@ dominio claros antes de llegar a la base de datos.
 La privacidad se aplica en el mapper de salida: primero se valida que el perfil esté activo y sea
 visible para el visitante; luego se filtran ubicación, contacto, links y portfolio por `Visibility`.
 Ownership se resuelve con `userId` para músico y `ownerUserId` para banda, venue y proveedor.
+
+La búsqueda combina filtros Prisma y un conjunto de candidatos limitado a 200 para ordenamientos
+calculados. El scorer es una función pura compartida por búsqueda y recomendaciones. La geografía de
+PT-04 compara zonas textuales; no afirma distancia métrica. Las decisiones descartadas se excluyen
+por contexto (`self` o banda) y el score almacenado conserva trazabilidad de la decisión.
 
 ## Autenticación y seguridad
 
@@ -101,8 +109,8 @@ formato, corre tests, ejecuta lint y compila los workspaces. No existe ningún p
 
 ## Próximos paquetes sugeridos
 
-1. **PT-04:** búsqueda y recomendación de perfiles visibles.
-2. Convocatorias, postulaciones, eventos y ensayos.
+1. **PT-05:** convocatorias y postulantes sobre `Call`/`Application`.
+2. Eventos y ensayos.
 3. Chat en tiempo real y notificaciones.
 4. Marketplace, calificaciones, reportes y herramientas administrativas.
 5. Observabilidad, recuperación de cuenta, refresh/revocación, hardening y despliegue.

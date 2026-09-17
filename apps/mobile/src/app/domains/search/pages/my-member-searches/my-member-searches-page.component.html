@@ -1,0 +1,24 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Mis búsquedas</ion-title></ion-toolbar
+  ></ion-header
+><ion-content
+  ><main class="page-shell">
+    <ion-button routerLink="/member-searches/new">Nueva búsqueda</ion-button>
+    @if (items(); as searches) {
+      @for (item of searches; track item.id) {
+        <article class="card">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.status }} · {{ item._count?.applications || 0 }} postulaciones</p>
+          <ion-button size="small" [routerLink]="['/member-searches', item.id]"
+            >Gestionar</ion-button
+          >
+        </article>
+      } @empty {
+        <p>Todavía no publicaste búsquedas.</p>
+      }
+    } @else {
+      <ion-spinner />
+    }</main
+></ion-content>

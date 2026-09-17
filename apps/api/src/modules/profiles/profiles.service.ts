@@ -295,6 +295,7 @@ export class ProfilesService {
         genres: profile.genres,
         influences: viewerUserId ? profile.influences : undefined,
         experience: viewerUserId ? profile.experience : undefined,
+        experienceLevel: profile.experienceLevel,
         availableForProjects: profile.availableForProjects,
         isSoloProject: profile.isSoloProject,
         photoUrl: profile.photoUrl,

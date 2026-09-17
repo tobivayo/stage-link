@@ -1,0 +1,79 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Detalle de búsqueda</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    @if (search(); as item) {
+      <article class="card">
+        <h1>{{ item.title }}</h1>
+        <p>{{ item.description }}</p>
+        <p>
+          <strong>{{ item.requiredInstrument }}</strong> · {{ item.genres.join(', ') }}
+        </p>
+        <p class="meta">
+          {{ item.locationText || 'Sin zona' }} · {{ item.modality }} · {{ item.status }}
+        </p>
+        @if (item.view === 'OWNER') {
+          <div class="actions">
+            <ion-button
+              color="secondary"
+              fill="outline"
+              (click)="close()"
+              [disabled]="item.status !== 'OPEN'"
+              >Cerrar búsqueda</ion-button
+            >
+          </div>
+        } @else if (item.status === 'OPEN') {
+          <form [formGroup]="form">
+            <ion-textarea
+              label="Mensaje opcional"
+              labelPlacement="stacked"
+              formControlName="message"
+            /><ion-button (click)="apply()">Postularme</ion-button>
+          </form>
+        }
+      </article>
+      @if (item.view === 'OWNER') {
+        <h2>Postulaciones recibidas</h2>
+        @for (application of received(); track application.id) {
+          <article class="card">
+            <h3>
+              {{
+                application.musicianProfile.stageName ||
+                  application.musicianProfile.user.firstName +
+                    ' ' +
+                    application.musicianProfile.user.lastName
+              }}
+            </h3>
+            <p>{{ application.message }}</p>
+            <p class="meta">{{ application.status }}</p>
+            <div class="actions">
+              <ion-button
+                size="small"
+                fill="outline"
+                [routerLink]="['/search/musicians', application.musicianProfile.id]"
+                >Ver perfil</ion-button
+              ><ion-button size="small" (click)="review(application, 'REVIEWED')"
+                >Revisada</ion-button
+              ><ion-button size="small" (click)="review(application, 'ACCEPTED')"
+                >Aceptar</ion-button
+              ><ion-button size="small" color="secondary" (click)="review(application, 'REJECTED')"
+                >Rechazar</ion-button
+              ><ion-button size="small" fill="clear" (click)="contact(application)"
+                >Contactar</ion-button
+              >
+            </div>
+          </article>
+        }
+      }
+    } @else if (!message()) {
+      <ion-spinner />
+    }
+    @if (message()) {
+      <p>{{ message() }}</p>
+    }
+  </main></ion-content
+>

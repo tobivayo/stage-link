@@ -16,6 +16,10 @@ Schema Language no puede representar.
 - `BandProject`, `BandMember` y `BandInvitation` cubren propiedad, membresía e invitaciones.
 - `ProfileLink`, `PortfolioItem` y `PortfolioItemShare` cubren enlaces, material externo y la decisión
   de un integrante de mostrar material de banda en su portfolio individual.
+- `MemberSearch` y `MemberSearchApplication` cubren reclutamiento de integrantes sin reutilizar las
+  convocatorias de eventos de PT-05.
+- `MusicianRecommendationDecision` conserva interés o descarte por usuario y contexto; `ContactIntent`
+  registra una intención inicial sin crear chats.
 - `Call` y `Application` permiten postulaciones de un músico o una banda y múltiples postulaciones
   aceptadas por convocatoria.
 - `Event`, `EventParticipant`, `Rehearsal` y `RehearsalParticipant` registran participantes y estados.
@@ -55,10 +59,17 @@ Schema Language no puede representar.
     profesional dentro de la misma transacción que crea su perfil o banda mínima.
 14. `User` conserva aceptación de términos y ubicación inicial como texto. `Location` se reserva para
     perfiles y recursos con dirección estructurada.
+15. `experienceLevel` es un dato ordenable opcional; `experience` se conserva como relato libre.
+16. Cada `MemberSearch` pertenece exactamente a un músico individual o una banda. La migración lo
+    garantiza con `CHECK`; `creatorUserId` conserva quién publicó.
+17. La clave `contextKey` evita duplicar decisiones de recomendación cuando `bandProjectId` es nulo,
+    comportamiento que un unique nullable de PostgreSQL no resolvería.
+18. `ContactIntent` usa destino polimórfico validado por servicio y un `targetUserId` relacional. Un
+    índice parcial impide más de una intención pendiente al mismo perfil por solicitante.
 
 ## Puntos pendientes
 
-- Definir catálogo normalizado de instrumentos, géneros y servicios si los filtros lo requieren.
+- Definir catálogo normalizado y aliases de instrumentos, géneros y servicios a partir del uso real.
 - Decidir si las ubicaciones deben ser inmutables o generar snapshots para preservar eventos pasados.
 - Integrar entrega real de invitaciones por email; PT-03 ya persiste destinatarios no registrados.
 - Definir permisos detallados dentro de bandas, venues y proveedores más allá de `OWNER` y `ADMIN`.

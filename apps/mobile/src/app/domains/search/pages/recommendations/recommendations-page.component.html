@@ -1,0 +1,32 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Recomendaciones</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (current; as item) {
+      <article class="card">
+        <p class="score">{{ item.compatibilityScore }} puntos de compatibilidad</p>
+        <h1>{{ item.displayName }}</h1>
+        <p>{{ item.bio }}</p>
+        <p>{{ item.instruments.join(', ') }} · {{ item.genres.join(', ') }}</p>
+        <p class="meta">{{ item.compatibilityReasons.join(' · ') }}</p>
+        <div class="actions">
+          <ion-button color="secondary" fill="outline" (click)="decide('DISMISSED')"
+            >Descartar</ion-button
+          ><ion-button (click)="decide('INTERESTED')">Me interesa</ion-button
+          ><ion-button fill="clear" [routerLink]="['/search/musicians', item.id]"
+            >Ver perfil</ion-button
+          >
+        </div>
+      </article>
+    } @else if (!loading()) {
+      <p>{{ message() || 'No hay más perfiles para revisar.' }}</p>
+    }
+  </main></ion-content
+>

@@ -16,6 +16,7 @@ export interface MusicianProfileDto {
   genres: string[];
   influences: string[];
   experience: string | null;
+  experienceLevel: ExperienceLevel | null;
   previousProjects: string[];
   availableForProjects: boolean;
   isSoloProject: boolean;
@@ -26,6 +27,8 @@ export interface MusicianProfileDto {
   status: string;
   links: ProfileLinkDto[];
 }
+
+export type ExperienceLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'PROFESSIONAL';
 
 export interface BandProjectDto {
   id: string;
@@ -41,6 +44,7 @@ export interface BandProjectDto {
   status: string;
   links?: ProfileLinkDto[];
   _count?: { members: number };
+  isOwner?: boolean;
 }
 
 export interface BandMemberDto {
@@ -134,6 +138,7 @@ export interface PublicProfileDto {
   bio?: string | null;
   genres?: string[];
   instruments?: string[];
+  experienceLevel?: ExperienceLevel | null;
   serviceTags?: string[];
   locationText?: string | null;
   photoUrl?: string | null;

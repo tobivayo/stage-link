@@ -11,6 +11,7 @@ export interface MusicianProfileInput {
   genres: string[];
   influences?: string[];
   experience?: string;
+  experienceLevel?: string;
   previousProjects?: string[];
   availableForProjects: boolean;
   isSoloProject?: boolean;

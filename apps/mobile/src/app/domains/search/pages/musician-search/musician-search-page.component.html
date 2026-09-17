@@ -1,0 +1,75 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Buscar músicos</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <form class="filters" [formGroup]="form" (ngSubmit)="search()">
+      <ion-item
+        ><ion-input label="Nombre o texto" labelPlacement="stacked" formControlName="query"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Instrumento" labelPlacement="stacked" formControlName="instrument"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Género" labelPlacement="stacked" formControlName="genre"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Zona" labelPlacement="stacked" formControlName="location"
+      /></ion-item>
+      <ion-item
+        ><ion-input label="Influencia" labelPlacement="stacked" formControlName="influence"
+      /></ion-item>
+      <ion-item
+        ><ion-select label="Experiencia" labelPlacement="stacked" formControlName="experienceLevel"
+          ><ion-select-option value="">Cualquiera</ion-select-option
+          ><ion-select-option value="BEGINNER">Inicial</ion-select-option
+          ><ion-select-option value="INTERMEDIATE">Intermedia</ion-select-option
+          ><ion-select-option value="ADVANCED">Avanzada</ion-select-option
+          ><ion-select-option value="PROFESSIONAL">Profesional</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-select label="Orden" labelPlacement="stacked" formControlName="sort"
+          ><ion-select-option value="COMPATIBILITY">Compatibilidad</ion-select-option
+          ><ion-select-option value="LOCATION">Zona</ion-select-option
+          ><ion-select-option value="EXPERIENCE">Experiencia</ion-select-option
+          ><ion-select-option value="RECENT">Actualización</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-toggle formControlName="available">Disponible para proyectos</ion-toggle></ion-item
+      >
+      <ion-button type="submit" [disabled]="loading()">Buscar</ion-button>
+    </form>
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (item of items(); track item.id) {
+      <article class="card">
+        <h2>{{ item.displayName }}</h2>
+        <p class="score">{{ item.compatibilityScore }} puntos de compatibilidad</p>
+        <p>{{ item.instruments.join(', ') }} · {{ item.genres.join(', ') }}</p>
+        @if (item.locationText) {
+          <p class="meta">{{ item.locationText }}</p>
+        }
+        <div class="actions">
+          <ion-button size="small" [routerLink]="['/search/musicians', item.id]"
+            >Ver perfil</ion-button
+          >
+        </div>
+      </article>
+    }
+    @if (searched() && !loading() && !error() && items().length === 0) {
+      <p>No encontramos músicos con esos filtros.</p>
+    }
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (hasMore() && !loading()) {
+      <ion-button fill="outline" (click)="loadMore()">Cargar más</ion-button>
+    }
+  </main>
+</ion-content>

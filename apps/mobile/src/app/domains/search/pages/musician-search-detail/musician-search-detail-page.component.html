@@ -1,0 +1,27 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Perfil</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    @if (profile(); as item) {
+      <article class="card">
+        <h1>{{ item.name }}</h1>
+        <p>{{ item.bio || item.description }}</p>
+        <p>{{ item.instruments?.join(', ') }}</p>
+        <p>{{ item.genres?.join(', ') }}</p>
+        @if (item.locationText) {
+          <p class="meta">{{ item.locationText }}</p>
+        }
+        <ion-button (click)="contact()">Registrar interés</ion-button>
+      </article>
+    } @else if (!message()) {
+      <ion-spinner />
+    }
+    @if (message()) {
+      <p>{{ message() }}</p>
+    }
+  </main></ion-content
+>

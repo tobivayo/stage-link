@@ -60,6 +60,7 @@ export class MusicianProfilePageComponent implements OnInit {
     genres: ['', Validators.required],
     influences: '',
     experience: '',
+    experienceLevel: '',
     previousProjects: '',
     availableForProjects: false,
     isSoloProject: true,
@@ -85,6 +86,7 @@ export class MusicianProfilePageComponent implements OnInit {
             stageName: profile.stageName ?? '',
             bio: profile.bio ?? '',
             experience: profile.experience ?? '',
+            experienceLevel: profile.experienceLevel ?? '',
             locationText: profile.locationText ?? '',
             photoUrl: profile.photoUrl ?? '',
             linkLabel: profile.links[0]?.label ?? '',
@@ -110,6 +112,7 @@ export class MusicianProfilePageComponent implements OnInit {
       genres: this.tags(value.genres),
       influences: this.tags(value.influences),
       previousProjects: this.tags(value.previousProjects),
+      experienceLevel: value.experienceLevel || undefined,
       photoUrl: value.photoUrl || undefined,
       locationText: value.locationText || undefined,
       links: linkUrl

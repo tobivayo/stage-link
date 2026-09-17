@@ -18,7 +18,7 @@ import {
 } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
-import { ProfileStatus, Visibility } from '../../../generated/prisma/enums';
+import { ExperienceLevel, ProfileStatus, Visibility } from '../../../generated/prisma/enums';
 
 export class ProfileLinkInputDto {
   @IsString()
@@ -101,6 +101,10 @@ export class CreateMusicianProfileDto {
   @IsString()
   @Length(1, 3000)
   experience?: string;
+
+  @IsOptional()
+  @IsEnum(ExperienceLevel)
+  experienceLevel?: ExperienceLevel;
 
   @IsOptional()
   @IsArray()

@@ -41,6 +41,77 @@ export const routes: Routes = [
             (m) => m.RolePreferencesPageComponent,
           ),
       },
+      { path: 'search', pathMatch: 'full', redirectTo: 'search/musicians' },
+      {
+        path: 'search/musicians',
+        loadComponent: () =>
+          import('./domains/search/pages/musician-search/musician-search-page.component').then(
+            (m) => m.MusicianSearchPageComponent,
+          ),
+      },
+      {
+        path: 'search/musicians/:id',
+        loadComponent: () =>
+          import('./domains/search/pages/musician-search-detail/musician-search-detail-page.component').then(
+            (m) => m.MusicianSearchDetailPageComponent,
+          ),
+      },
+      {
+        path: 'recommendations/review',
+        loadComponent: () =>
+          import('./domains/search/pages/recommendations/recommendations-page.component').then(
+            (m) => m.RecommendationsPageComponent,
+          ),
+      },
+      {
+        path: 'recommendations',
+        loadComponent: () =>
+          import('./domains/search/pages/recommendations/recommendations-page.component').then(
+            (m) => m.RecommendationsPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches/new',
+        loadComponent: () =>
+          import('./domains/search/pages/member-search-editor/member-search-editor-page.component').then(
+            (m) => m.MemberSearchEditorPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches/my',
+        loadComponent: () =>
+          import('./domains/search/pages/my-member-searches/my-member-searches-page.component').then(
+            (m) => m.MyMemberSearchesPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches/applications',
+        loadComponent: () =>
+          import('./domains/search/pages/my-applications/my-applications-page.component').then(
+            (m) => m.MyApplicationsPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches',
+        loadComponent: () =>
+          import('./domains/search/pages/member-searches/member-searches-page.component').then(
+            (m) => m.MemberSearchesPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches/:id/apply',
+        loadComponent: () =>
+          import('./domains/search/pages/member-search-detail/member-search-detail-page.component').then(
+            (m) => m.MemberSearchDetailPageComponent,
+          ),
+      },
+      {
+        path: 'member-searches/:id',
+        loadComponent: () =>
+          import('./domains/search/pages/member-search-detail/member-search-detail-page.component').then(
+            (m) => m.MemberSearchDetailPageComponent,
+          ),
+      },
       {
         path: 'profile',
         loadComponent: () =>

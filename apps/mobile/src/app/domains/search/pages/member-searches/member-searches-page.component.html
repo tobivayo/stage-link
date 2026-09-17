@@ -1,0 +1,59 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Búsquedas de integrantes</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <div class="actions">
+      <ion-button routerLink="/member-searches/new">Publicar</ion-button
+      ><ion-button fill="outline" routerLink="/member-searches/my">Mis búsquedas</ion-button
+      ><ion-button fill="outline" routerLink="/member-searches/applications"
+        >Mis postulaciones</ion-button
+      >
+    </div>
+    <form class="filters" [formGroup]="form" (ngSubmit)="load()">
+      <ion-item
+        ><ion-input
+          label="Instrumento"
+          labelPlacement="stacked"
+          formControlName="instrument" /></ion-item
+      ><ion-item
+        ><ion-input label="Género" labelPlacement="stacked" formControlName="genre" /></ion-item
+      ><ion-item
+        ><ion-input label="Zona" labelPlacement="stacked" formControlName="location" /></ion-item
+      ><ion-item
+        ><ion-select label="Modalidad" labelPlacement="stacked" formControlName="modality"
+          ><ion-select-option value="">Todas</ion-select-option
+          ><ion-select-option value="IN_PERSON">Presencial</ion-select-option
+          ><ion-select-option value="REMOTE">Remoto</ion-select-option
+          ><ion-select-option value="HYBRID">Mixto</ion-select-option></ion-select
+        ></ion-item
+      ><ion-button type="submit">Filtrar</ion-button>
+    </form>
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @for (item of items(); track item.id) {
+      <article class="card">
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.requiredInstrument }} · {{ item.genres.join(', ') }}</p>
+        <p class="meta">{{ item.locationText || 'Sin zona' }} · {{ item.modality }}</p>
+        <ion-button size="small" [routerLink]="['/member-searches', item.id]"
+          >Ver detalle</ion-button
+        >
+      </article>
+    } @empty {
+      @if (!loading() && !error()) {
+        <p>No encontramos búsquedas con estos filtros.</p>
+      }
+    }
+    @if (loading()) {
+      <ion-spinner />
+    }
+    @if (hasMore() && !loading()) {
+      <ion-button fill="outline" (click)="loadMore()">Cargar más</ion-button>
+    }
+  </main></ion-content
+>

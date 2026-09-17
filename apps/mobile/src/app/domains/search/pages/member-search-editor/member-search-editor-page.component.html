@@ -1,0 +1,76 @@
+<ion-header
+  ><ion-toolbar color="dark"
+    ><ion-buttons slot="start"><ion-back-button /></ion-buttons
+    ><ion-title>Nueva búsqueda</ion-title></ion-toolbar
+  ></ion-header
+>
+<ion-content
+  ><main class="page-shell">
+    <form class="filters" [formGroup]="form" (ngSubmit)="save()">
+      <ion-item
+        ><ion-select label="Publicar como" labelPlacement="stacked" formControlName="bandProjectId"
+          ><ion-select-option value="">Proyecto individual</ion-select-option>
+          @for (band of bands(); track band.id) {
+            <ion-select-option [value]="band.id">{{ band.name }}</ion-select-option>
+          }
+        </ion-select></ion-item
+      >
+      <ion-item
+        ><ion-input label="Título" labelPlacement="stacked" formControlName="title" /></ion-item
+      ><ion-item
+        ><ion-textarea
+          label="Descripción"
+          labelPlacement="stacked"
+          formControlName="description" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Instrumento requerido"
+          labelPlacement="stacked"
+          formControlName="requiredInstrument" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Géneros (separados por coma)"
+          labelPlacement="stacked"
+          formControlName="genres"
+      /></ion-item>
+      <ion-item
+        ><ion-select
+          label="Experiencia"
+          labelPlacement="stacked"
+          formControlName="desiredExperience"
+          ><ion-select-option value="">Indistinta</ion-select-option
+          ><ion-select-option value="BEGINNER">Inicial</ion-select-option
+          ><ion-select-option value="INTERMEDIATE">Intermedia</ion-select-option
+          ><ion-select-option value="ADVANCED">Avanzada</ion-select-option
+          ><ion-select-option value="PROFESSIONAL">Profesional</ion-select-option></ion-select
+        ></ion-item
+      >
+      <ion-item
+        ><ion-input
+          label="Disponibilidad esperada"
+          labelPlacement="stacked"
+          formControlName="expectedAvailability" /></ion-item
+      ><ion-item
+        ><ion-input
+          label="Zona"
+          labelPlacement="stacked"
+          formControlName="locationText" /></ion-item
+      ><ion-item
+        ><ion-select label="Modalidad" labelPlacement="stacked" formControlName="modality"
+          ><ion-select-option value="IN_PERSON">Presencial</ion-select-option
+          ><ion-select-option value="REMOTE">Remoto</ion-select-option
+          ><ion-select-option value="HYBRID">Mixto</ion-select-option></ion-select
+        ></ion-item
+      ><ion-item
+        ><ion-select label="Visibilidad" labelPlacement="stacked" formControlName="visibility"
+          ><ion-select-option value="PUBLIC">Pública</ion-select-option
+          ><ion-select-option value="REGISTERED_ONLY">Solo registrados</ion-select-option
+          ><ion-select-option value="PRIVATE">Privada</ion-select-option></ion-select
+        ></ion-item
+      ><ion-button type="submit">Publicar búsqueda</ion-button>
+    </form>
+    @if (message()) {
+      <p class="error">{{ message() }}</p>
+    }
+  </main></ion-content
+>

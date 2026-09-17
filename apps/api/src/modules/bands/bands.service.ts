@@ -57,8 +57,8 @@ export class BandsService {
     });
   }
 
-  getMine(userId: string) {
-    return this.prisma.bandProject.findMany({
+  async getMine(userId: string) {
+    const bands = await this.prisma.bandProject.findMany({
       where: {
         deletedAt: null,
         OR: [
@@ -69,6 +69,7 @@ export class BandsService {
       include: bandInclude,
       orderBy: { name: 'asc' },
     });
+    return bands.map((band) => ({ ...band, isOwner: band.ownerUserId === userId }));
   }
 
   async getVisible(id: string, viewerUserId: string | null) {
